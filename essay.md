@@ -76,7 +76,7 @@ Với <img src="https://render.githubusercontent.com/render/math?math=y_{ji}"> v
 Kết hợp tất cả các cặp dữ liệu <img src="https://render.githubusercontent.com/render/math?math=x_i, y_i, i = 1, 2, ..., N">, chúng ta sẽ có hàm mất mát cho Softmax Regression như sau:
 
 <img src="https://render.githubusercontent.com/render/math?math=L(\theta \mid X, Y) = - \sum_{i=1}^N \sum_{j=1}^C y_{ji} log(\frac{\exp(\theta_j^T x_i)}{\sum_{k=1}^C \exp(\theta_k^T x_i)})">
- 
+
 Với ma trận trọng số <img src="https://render.githubusercontent.com/render/math?math=\theta"> là biến cần tối ưu. Hàm mất mát này trông có vẻ đáng sợ, nhưng đừng sợ, đọc tiếp các bạn sẽ thấy đạo hàm của nó rất đẹp (và đáng yêu).
 
 #### 2.2.4. Tối ưu hàm mất mát
@@ -111,7 +111,73 @@ Giả sử rằng chúng ta sử dụng SGD, công thức cập nhật cho ma tr
 
 ## 3. CÀI ĐẶT CHƯƠNG TRÌNH
 
+### 3.1 Trực quan hóa và phân tích sơ bộ dữ liệu
+
+#### 3.1.1 Phân tích sơ bộ
+
+Dưới đây là mô tả sơ bộ dữ liệu cho các trường. Nhìn chung bộ dữ liệu là đầy đủ và không mất mát nên ta không phải thực hiện implement trên bộ dữ liệu này.
+
+
+|       |   fixed acidity |   volatile acidity |   citric acid |   residual sugar |   chlorides |   free sulfur dioxide |   total sulfur dioxide |   density |       pH |   sulphates |   alcohol |   quality |
+|:------|----------------:|-------------------:|--------------:|-----------------:|------------:|----------------------:|-----------------------:|----------:|---------:|------------:|----------:|----------:|
+| count |        1599.000 |           1599.000 |      1599.000 |         1599.000 |    1599.000 |              1599.000 |               1599.000 |  1599.000 | 1599.000 |    1599.000 |  1599.000 |  1599.000 |
+| mean  |           8.320 |              0.528 |         0.271 |            2.539 |       0.087 |                15.875 |                 46.468 |     0.997 |    3.311 |       0.658 |    10.423 |     5.636 |
+| std   |           1.741 |              0.179 |         0.195 |            1.410 |       0.047 |                10.460 |                 32.895 |     0.002 |    0.154 |       0.170 |     1.066 |     0.808 |
+| min   |           4.600 |              0.120 |         0.000 |            0.900 |       0.012 |                 1.000 |                  6.000 |     0.990 |    2.740 |       0.330 |     8.400 |     3.000 |
+| 25%   |           7.100 |              0.390 |         0.090 |            1.900 |       0.070 |                 7.000 |                 22.000 |     0.996 |    3.210 |       0.550 |     9.500 |     5.000 |
+| 50%   |           7.900 |              0.520 |         0.260 |            2.200 |       0.079 |                14.000 |                 38.000 |     0.997 |    3.310 |       0.620 |    10.200 |     6.000 |
+| 75%   |           9.200 |              0.640 |         0.420 |            2.600 |       0.090 |                21.000 |                 62.000 |     0.998 |    3.400 |       0.730 |    11.100 |     6.000 |
+| max   |          15.900 |              1.580 |         1.000 |           15.500 |       0.611 |                72.000 |                289.000 |     1.004 |    4.010 |       2.000 |    14.900 |     8.000 |
+
+Hầu hết các trường có độ lệch chuẩn tương đối thấp ở mức dưới 2 (chiếm xấp xỉ 83%). Tuy nhiên có 2 trường đó là:
+
+- `free sulfur dioxide` tức lượng tồn tại tự do của <img src="https://render.githubusercontent.com/render/math?math=SO_2"> (nghĩa là khí này tồn tại dưới dạng khí hòa tan hoặc bisulfite
+
+- `total sulfur dioxide` tổng lượng <img src="https://render.githubusercontent.com/render/math?math=SO_2">
+
+Có độ lệch chuẩn cao lần lượt là **10.46** và **32.9**. 2 trường dữ liệu này tuy liên quan đến nhau song thể hiện những ý nghĩa riêng biệt. Trong khi lượng tồn tại tự do của Sulfur dioxide giúp ức chế sự phát triển của vi khuẩn thì tổng lượng Sulfur dioxide lại liên quan nhiều hơn ở mức độ cảm nhận của khứu giác. Vì vậy 2 yếu tố này có thể nói là độc lập về độ ảnh hưởng đến chất lượng rượu.
+
+<img src="/Images/target.png" alt="target" style="width:70%;" />
+
+​	Phân bổ trường **quality** tức trường dữ liệu mà ta đang xét cho mục đích dự đoán có thể nói là phân bổ theo hình chuông và nghiêng về bên phải với giá trị tâm moment thứ ba là 0.218 và độ lệch chuẩn tương đối thấp. Điểm chất lượng tập trung mạnh ở 5 6.
+
+### 3.1.2 Phân bổ của dữ liệu
+
+![density](C:\Users\vanvi\Downloads\CS431\Images\density.png)
+
+​	
+
+​	Có thể thấy đa phần các trường dữ liệu phân bổ theo phân phối chuẩn và có độ lệch cao, một số trường dữ liệu như `alcohol,fixed acidity, free sulfur dioxidetotal, sulfur dioxide ` còn phân phối theo dạng **PERT**. 
+
+​	
+
+​	Cá biệt khi nhìn vào đường KDE của trường `volatile acidity` ta có thể thấy rằng trường này có dạng **Bimodal**. Trường này thể hiện lượng axit trong rượu, nếu quá cao có thể gây vị dấm khó chịu. Khi dữ liệu phân bố dạng **Bimodal** ta thương phải phân tích thêm để có thể đưa ra 2 trường mới thể hiện dưới dạng hình chuông. Tuy nhiên với tính chất của trường dữ liệu này vốn phụ thuộc vào giác quan ở một mức độ, khi lượng axit trong rượu ở dưới một mức nhất định, thì trường dữ liệu này không ảnh hưởng quá nhiều đến chất lượng rượu.
+
+​	![distribute_corr2quality](C:\Users\vanvi\Downloads\CS431\Images\distribute_corr2quality.png)
+
+​	Ở bảng dữ liệu này, ngoài trường dữ liệu là `residual sugar` và `PH` vốn thể hiện không quá rõ ràng sự tương quan với `quality` ngoài ra có thể nhận xét sơ bộ như sau:
+
+1. `fixed acidity` Rượu với điểm càng cao thì có độ lệch chuẩn ở thông số này càng cao, chứng tỏ rằng khi rượu càng cao cấp thì trọng lượng của thông số này càng nhẹ đi. Ngoài ra chất lượng rượu cũng có đôi chút liên quan tỉ lệ thuận với trung bình của thông số này, điều này chứng tỏ rằng nồng độ axit của rượu có liên quan đến chất lượng vì lượng axit này không bay hơi hoặc mất đi để tạo ra mùi mà thay vào đó nằm trong rượu để cân bằng và tạo vị. Tuy nhiên cá biệt là điểm 8 trong chất lượng lại có lượng axit thấp hơn điểm 7.
+
+2. `volatile acidity` Đây là lượng axit bay hơi, có thể thay đổi trong khi để rượu trong decanters. Như dự đoán lượng axit này nếu quá lớn sẽ ảnh hưởng đến vị của rượu (có thể không ảnh hưởng quá nhiều đến mùi do quá trình nghỉ) nên trung bình của thông số này tỉ lệ nghịch với chất lượng rượu.
+
+3. `citric acid` Trường này có trung bình tương đối tỉ lệ thuận với chất lượng
+
+4. `chlorides` Có thể thấy rằng rượu với điểm chất lượng cao (7,8) có lượng Clo tương đối ổn định và độ lệch chuẩn thấp. Chúng giao động nhỏ ở một mức nhất định trong khi rượu chất lượng thấp có mức giao động rất lớn ở thông số này.
+
+5. `free sulfur dioxide` và `total sulfur dioxide` Nhìn vào chấm trắng trung bình của 2 trường này có thể thấy chúng phân bổ theo phân phối chuẩn với mức trung bình sulfur dioxide cao với các loại rượu trung cấp và thấp ở các loại rượu cao cấp và kém chất lượng.
+
+6. `density` Thông số này phụ thuộc vào lượng đường và độ cồn trong rượu. Phân phối tương đối rộng ở mức thấp với các loại rượu đắt tiền và ổn định ở mức cao với các loại rượu thấp hơn.
+
+7. `sulphates` Trường này có giá trị trung bình tỉ lệ thuận với chất lượng rượu
+
+8. `alcohol` Ngoài cá biệt ở điểm 5 có mức lệch chuẩn thấp và ngược lại với các giá trị trung bình, Trường này có giá trị trung bình tỉ lệ thuận với chất lượng rượu.
+
+   
+
 ## 4. BÀI TẬP
+
+
 
 ## 5. KẾT LUẬN
 
