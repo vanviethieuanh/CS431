@@ -143,7 +143,7 @@ Có độ lệch chuẩn cao lần lượt là **10.46** và **32.9**. 2 trườ
 
 ### 3.1.2 Phân bổ của dữ liệu
 
-![density](Images\density.png)
+![density](Images/density.png)
 
 ​	
 
@@ -153,7 +153,7 @@ Có độ lệch chuẩn cao lần lượt là **10.46** và **32.9**. 2 trườ
 
 ​	Cá biệt khi nhìn vào đường KDE của trường `volatile acidity` ta có thể thấy rằng trường này có dạng **Bimodal**. Trường này thể hiện lượng axit trong rượu, nếu quá cao có thể gây vị dấm khó chịu. Khi dữ liệu phân bố dạng **Bimodal** ta thương phải phân tích thêm để có thể đưa ra 2 trường mới thể hiện dưới dạng hình chuông. Tuy nhiên với tính chất của trường dữ liệu này vốn phụ thuộc vào giác quan ở một mức độ, khi lượng axit trong rượu ở dưới một mức nhất định, thì trường dữ liệu này không ảnh hưởng quá nhiều đến chất lượng rượu.
 
-​	![distribute_corr2quality](Images\distribute_corr2quality.png)
+​	![distribute_corr2quality](Images/distribute_corr2quality.png)
 
 ​	Ở bảng dữ liệu này, ngoài trường dữ liệu là `residual sugar` và `PH` vốn thể hiện không quá rõ ràng sự tương quan với `quality` ngoài ra có thể nhận xét sơ bộ như sau:
 
