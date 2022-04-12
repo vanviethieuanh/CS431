@@ -137,13 +137,13 @@ Hầu hết các trường có độ lệch chuẩn tương đối thấp ở m�
 
 Có độ lệch chuẩn cao lần lượt là **10.46** và **32.9**. 2 trường dữ liệu này tuy liên quan đến nhau song thể hiện những ý nghĩa riêng biệt. Trong khi lượng tồn tại tự do của Sulfur dioxide giúp ức chế sự phát triển của vi khuẩn thì tổng lượng Sulfur dioxide lại liên quan nhiều hơn ở mức độ cảm nhận của khứu giác. Vì vậy 2 yếu tố này có thể nói là độc lập về độ ảnh hưởng đến chất lượng rượu.
 
-<img src="/Images/target.png" alt="target" style="width:70%;" />
+<img src="Images/target.png" alt="target" style="width:70%;" />
 
 ​	Phân bổ trường **quality** tức trường dữ liệu mà ta đang xét cho mục đích dự đoán có thể nói là phân bổ theo hình chuông và nghiêng về bên phải với giá trị tâm moment thứ ba là 0.218 và độ lệch chuẩn tương đối thấp. Điểm chất lượng tập trung mạnh ở 5 6.
 
 ### 3.1.2 Phân bổ của dữ liệu
 
-![density](C:\Users\vanvi\Downloads\CS431\Images\density.png)
+![density](Images\density.png)
 
 ​	
 
@@ -153,7 +153,7 @@ Có độ lệch chuẩn cao lần lượt là **10.46** và **32.9**. 2 trườ
 
 ​	Cá biệt khi nhìn vào đường KDE của trường `volatile acidity` ta có thể thấy rằng trường này có dạng **Bimodal**. Trường này thể hiện lượng axit trong rượu, nếu quá cao có thể gây vị dấm khó chịu. Khi dữ liệu phân bố dạng **Bimodal** ta thương phải phân tích thêm để có thể đưa ra 2 trường mới thể hiện dưới dạng hình chuông. Tuy nhiên với tính chất của trường dữ liệu này vốn phụ thuộc vào giác quan ở một mức độ, khi lượng axit trong rượu ở dưới một mức nhất định, thì trường dữ liệu này không ảnh hưởng quá nhiều đến chất lượng rượu.
 
-​	![distribute_corr2quality](C:\Users\vanvi\Downloads\CS431\Images\distribute_corr2quality.png)
+​	![distribute_corr2quality](Images\distribute_corr2quality.png)
 
 ​	Ở bảng dữ liệu này, ngoài trường dữ liệu là `residual sugar` và `PH` vốn thể hiện không quá rõ ràng sự tương quan với `quality` ngoài ra có thể nhận xét sơ bộ như sau:
 
