@@ -107,6 +107,12 @@ Giả sử rằng chúng ta sử dụng SGD, công thức cập nhật cho ma tr
 
 <img src="https://render.githubusercontent.com/render/math?math=\theta = \theta \dotplus \eta x_i (y_i - a_i)^T">
 
+## 3. CÀI ĐẶT CHƯƠNG TRÌNH
+
+## 4. BÀI TẬP
+
+## 5. KẾT LUẬN
+
 ## THAM KHẢO
 1. http://deeplearning.stanford.edu/tutorial/supervised/SoftmaxRegression/
 2. https://machinelearningcoban.com/2017/02/17/softmax/
