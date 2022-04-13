@@ -176,10 +176,10 @@ Có độ lệch chuẩn cao lần lượt là **10.46** và **32.9**. 2 trườ
 ### Hiện thực hóa ý tưởng với Python
 Dựa trên phương pháp và phần giải thích toán học được nêu ra ở trên, chúng ta thực hiện tuần tự theo các bước để xây dựng một mô hình Softmax Regression
 #### Hàm softmax
-Dưới đây là code thực hiện tính toán hàm softmax  <img src="https://render.githubusercontent.com/render/math?math=a_i = \frac{exp(z_i)}{\sum_{i=1}^C exp(z_j)},  \forall_i = 1, 2, ..., C"> với đầu vào là một ma trận với mỗi cột là một vector **z** và đầu ra là một ma trận **A** với mỗi cột là một vector **a** được tính bằng hàm softmax với đầu vào là **z** với mỗi phần từ trong vector là thể hiện khả năng điểm dữ liệu được phân và các lớp tướng ứng
-Với trường hợp khi **z** quá lớn <img src="https://render.githubusercontent.com/render/math?math=exp(z_i)%20=%20e^{z_i}"> có thể dẩn đến hiện tượng tràn số gây sự sai lệch cho kết quả của hàm softmax 
+Dưới đây là mã nguồn thực hiện tính toán hàm softmax  <img src="https://render.githubusercontent.com/render/math?math=a_i = \frac{exp(z_i)}{\sum_{i=1}^C exp(z_j)},  \forall_i = 1, 2, ..., C"> với đầu vào là một ma trận với mỗi cột là một vector **z** và đầu ra là một ma trận **A** với mỗi cột là một vector **a** được tính bằng hàm softmax với đầu vào là **z** với mỗi phần từ trong vector là thể hiện khả năng điểm dữ liệu được phân và các lớp tướng ứng
+Với trường hợp khi **z** quá lớn <img src="https://render.githubusercontent.com/render/math?math=exp(z_i)%20=%20e^{z_i}"> có thể dẩn đến hiện tượng tràn số gây sự sai lệch cho kết quả của hàm softmax. Vậy phương pháp được đề xuất ra để khắc phục hiện tượng overflow là trừ đi <img src="https://render.githubusercontent.com/render/math?math=z_i"> một giá trị đủ lớn, giá trị đủ lớn này thường được chọn là  <img src="https://render.githubusercontent.com/render/math?math=c=max_i(z_i)">, chúng ta có triển khai như sau
 ```python
-def softmax_stable(Z):
+def softmax(Z):
     """
     Tính toán hàm softmax dựa trên các trường dữ liệu 
     của mỗi điểm dữ liệu tương ứng là các cột
@@ -206,27 +206,35 @@ def lost_softmax(X, Y, W):
 #### Tối ưu hàm mất mát bằng Stochastic gradient descent
 Với các hàm nền tảng được xây dựng ở trên, ở bước tiếp theo này chúng ta thực hiện xây dựng hàm cho mục đích tối ưu hàm mất mát dựa trên phương pháp Stochastic gradient descent để dần dần tính toán và cập nhật ma trận trong số **W** tiến tới tối thiểu hàm mất mát trong một khoảng tài nguyên cho phép
 ```python
-def softmax_regression(X, y, W_init, eta, tol = 1e-4, max_count = 10000):
+def softmax_regression(X, y, W_init, eta, tol = 1e-7, max_count = 100000):
+    """
+    Hàm tìm ma trận trọng số W mục tiêu cực tiểuđược hàm mất mát 
+    """
+    # Khởi tạo ma trận trọng số W tại một điểm bất kỳ trên miền dữ liệu từ đó sử dụng Gradient Descent tiến tới điểm cực tiểu
     W = [W_init]    
+    # C được gán giá trị là số lượng các lớp hay label 
     C = W_init.shape[1]
+    # Ma trận Y one-hot encoding từ vector output y 
     Y = convert_labels(y, C)
-    it = 0
+    # N, d lần lượt là các giá trị số lượng điểm dử liệu, chiều dữ li
     N = X.shape[1]
     d = X.shape[0]
     
+    # biến đếm count để giới hạn số lần lặp trong khoảng tài nguyên cho phép 
     count = 0
     check_w_after = 20
     while count < max_count:
-        # mix data 
+        # xáo trộn dữ liệu
         mix_id = np.random.permutation(N)
         for i in mix_id:
             xi = X[:, i].reshape(d, 1)
             yi = Y[:, i].reshape(C, 1)
             ai = softmax(np.dot(W[-1].T, xi))
+            # Cập nhật lại ma trận trong số mới
             W_new = W[-1] + eta*xi.dot((yi - ai).T)
             count += 1
-            # stopping criteria
-            if count%check_w_after == 0:                
+            # Kiểm tra điều kiện dừng
+            if count%check_w_after == 0:      
                 if np.linalg.norm(W_new - W[-check_w_after]) < tol:
                     return W
             W.append(W_new)
@@ -238,11 +246,11 @@ def softmax_regression(X, y, W_init, eta, tol = 1e-4, max_count = 10000):
 ```python
 def pred(W, X):
     """
-    predict output of each columns of X
-    Class of each x_i is determined by location of max probability
-    Note that class are indexed by [0, 1, 2, ...., C-1]
+    Dự đoán lớp được phân loại của mỗi điểm dữ liệu tương ứng với mỗi cột X
+    lớp của mỗi x_i được xác định theo vị trí của xác suất tối đa
+    với lớp được lập chỉ mục bởi [0, 1, 2, ...., C-1]
     """
-    A = softmax_stable(W.T.dot(X))
+    A = softmax(W.T.dot(X))
     
     return np.argmax(A, axis = 0)
 ```
@@ -250,15 +258,16 @@ def pred(W, X):
 Ứng dụng các bước triển khai mã nguồn ở trên và dựa vào phân tích, trực quán hóa dữ liệu chúng ta tiến hành thực hiện bài tập phân lớp với mục tiêu đề ra là với dữ liệu đầu vào là các trường thông tin fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density,       pH, sulphates, alcohol thì có thể phân loại ra chất lượng rượu `quality` nằm trong khoảng từ **3 đến 8** hay thuộc vào các label `[3, 4, 5, 6, 7, 8]`, tuần tự các bước thực thực hiện được bao gồm:
 ### Chuẩn bị, phân tích dữ liệu và tiền sử lý dữ liệu 
 Trong bài tập mẫu này chúng ta sử dụng bộ dữ liệu [Red Wine Quality](https://www.kaggle.com/datasets/uciml/red-wine-quality-cortez-et-al-2009?fbclid=IwAR0YYLnFmvLO3FQnGK-Du__-filz1h8-zDwVI3MKbeZM9xfE4_wdRiqQoiM) và thông tin về trực quán hóa và phân tích dữ liệu đã được trình bài cụ thẻ ở mục trên
+Qua phân tích dữ liệu chúng ta nhận thấy rằng trong bộ dữ liệu đều được biểu diển bằng dạng số và không có dữ liệu thiếu hoặc lệch quá nhiều do đó chúng ta chỉ sử dụng bước chuẩn hóa dữ liệu để tăng hiệu quả cho mô hình huấn luyện.
 ### Huấn luyện mô hình và kết quả 
-1. Ở bước tiêp theo này, chúng ta chia tập dữ liệu thành 2 phần bao gồm tập train và tập test với tỉ lệ là 8:2 để phục vụ cho múc đích huấn luyện và đánh giá mô hình 
+1. Ở bước tiêp theo này, chúng ta chia tập dữ liệu thành 2 phần bao gồm tập train và tập test với tỉ lệ là 8:2 để phục vụ cho mục đích huấn luyện và đánh giá mô hình, vì dử liệu mẫu này phục vụ cho việc tìm hiểu về mô hình Softmax Regression nên chúng ta không nhất thiết phải chia thêm tập kiểm thử và chúng ta cũng sử dụng toàn bộ trường dữ liệu cho việc huấn luyện.
 ```python
 # tập dữ liệu train 
 df_train = df.sample(frac=0.8, random_state=1)
 # tập dữ liệu test 
 df_test=df.drop(df_train.index)
 ```
-2. Tiếp theo chúng ta tách dữ liệu thành các trường đầu vào input và output
+2. Tiếp theo chúng ta tách dữ liệu thành các trường đầu vào input và output và đưa về kiểu dữ liệu phù hợp cho các tham số đầu vào của các hàm ta đã xây dựng ở trên ở đầy cụ thể là kiểu dử liệu `numpy.array`
 ```python
 ### tập dữ liệu train
 # ma trận X 
@@ -271,7 +280,7 @@ y_test = df['quality']
 # vector y chứa các label phân lớp
 X_test = df.drop(columns=['quality'])
 ```
-3. Bước kế tiếp, chúng ta chuẩn hóa dữ liệu bằng phương pháp **StandardScaler** để tăng độ hiệu quả cho mô hình 
+3. Bước kế tiếp, chúng ta chuẩn hóa dữ liệu bằng phương pháp **StandardScaler** như đã đề cập ở trên để tăng độ hiệu quả cho mô hình 
 ```python
 ###StandardScaler
 std_scaler = StandardScaler()
@@ -282,19 +291,25 @@ X_train_scaled = df_train_scaled.T
 Sau khi chuẩn hóa dữ liệu ta thu được một ma trận **X** `df_train_scaled` phục vụ cho việc huấn luyện mô hình
 4. Huận luyện mô hình
 ```python
+# eta là giá trị đại diển cho tốc độ học(learning rate) đưa vào tham số của mô hình Softmax Regression
+eta = .03 
+# d,c là các biến lần lượt là chiều dữ liệu và số lớp của mô hình để ta có thể khởi tạo ma trận trong số W ban đầu
+d = X_train_scaled.shape[0]
+# khởi tạo ma trận trọng số ban đầu
+W_init = np.random.randn(d, C)
+W = softmax_regression(X_train_scaled, y_train, W_init, eta)
 ```
 5. Kết quả
 ```python
- 
+# chuẩn hóa dử liệu test tượng tư như với tập train
 df_test_scaled = std_scaler.transform(X_test.to_numpy())
- 
 X_test_scaled = df_test_scaled.T
-X_test_scaled.shape
+# vector chứa các lớp được dự đoán của tập test
 quality_predict = pred(W[-1],X_test_scaled)
 ```
 Đánh giá kết quả của mô hình 
 ```python
-from sklearn.metrics import classification_report
+# Xuất kết quả đánh giá mô hình
 print(classification_report(y_test, quality_predict))
 ``` 
 ```txt
@@ -311,6 +326,7 @@ print(classification_report(y_test, quality_predict))
    macro avg       0.29      0.30      0.29      1599
 weighted avg       0.55      0.55      0.55      1599
 ```
+Qua các bước thực hiện ở trên, chúng ta có thể hiểu thêm và nắm rõ hơn về cách hoạt động của mô hình Softmax Regression và từ đó có thể tự mình xây dựng mô hình phân lớp Softmax cho các bài toán khác nhau.
 
 ## 5. KẾT LUẬN
 Mô hình Softmax Regression với ưu điểm là được sử dụng trong bài toán phân loại cho đa lớp, nên mô hình Softmax Regression là một trong những mô hình phổ biển được dùng hiện này. Ngoài ra thuật toán Softmax đặc biệt được sử dụng nhiều trong các mạng Neural có nhiều lớp, với những lớp trước được sử dụng cho mục đích trích xuất đặc trưng và lớp cuối cùng cho bài toán phần lớp là mô hình Softmax Regression
@@ -320,3 +336,4 @@ Mô hình Softmax Regression với ưu điểm là được sử dụng trong b�
 2. https://machinelearningcoban.com/2017/02/17/softmax/
 3. https://pic.plover.com/MISC/symbols.pdf
 4. https://colab.research.google.com/drive/1jZIHiTE7yYBr5-OdxAxjbBeZ0YbM1rKD?usp=sharing
+5. https://colab.research.google.com/drive/1MY0luobtabpuV1eB10gtmovyu1ImpCxy?usp=sharing
