@@ -173,13 +173,85 @@ Có độ lệch chuẩn cao lần lượt là **10.46** và **32.9**. 2 trườ
 
 8. `alcohol` Ngoài cá biệt ở điểm 5 có mức lệch chuẩn thấp và ngược lại với các giá trị trung bình, Trường này có giá trị trung bình tỉ lệ thuận với chất lượng rượu.
 
-   
+### Hiện thực hóa ý tưởng với Python
+Dựa trên phương pháp và phần giải thích toán học được nêu ra ở trên, chúng ta thực hiện tuần tự theo các bước để xây dựng một mô hình Softmax Regression
+#### Hàm softmax
+Dưới đây là code thực hiện tính toán hàm softmax  <img src="https://render.githubusercontent.com/render/math?math=a_i = \frac{exp(z_i)}{\sum_{i=1}^C exp(z_j)},  \forall_i = 1, 2, ..., C"> với đầu vào là một ma trận với mỗi cột là một vector **z** và đầu ra là một ma trận **A** với mỗi cột là một vector **a** được tính bằng hàm softmax với đầu vào là **z** với mỗi phần từ trong vector là thể hiện khả năng điểm dữ liệu được phân và các lớp tướng ứng
+Với trường hợp khi **z** quá lớn <img src="https://render.githubusercontent.com/render/math?math=exp(z_i)%20=%20e^{z_i}"> có thể dẩn đến hiện tượng tràn số gây sự sai lệch cho kết quả của hàm softmax 
+```python
+def softmax_stable(Z):
+    """
+    Tính toán hàm softmax dựa trên các trường dữ liệu 
+    của mỗi điểm dữ liệu tương ứng là các cột
+    """
+    # tính giá trị z qua đó tính được giá trị của exp(z)
+    e_Z = np.exp(Z - np.max(Z, axis = 0, keepdims = True))
+    # tính giá trị a
+    A = e_Z / e_Z.sum(axis = 0)
+    return A
+```
+#### Hàm mất mắt Cross Entropy 
+Hàm mất mát được sây dựng dựa trên hàm Cross Entropy với công thức toán học được biểu diễn lại như sau: <img src ="https://render.githubusercontent.com/render/math?math=L(\theta%20\mid%20X,%20Y)%20=%20-%20\sum_{i=1}^N%20\sum_{j=1}^C%20y_{ji}%20log(\frac{\exp(\theta_j^T%20x_i)}{\sum_{k=1}^C%20\exp(\theta_k^T%20x_i)})"> dựa trên công thức này, chúng ta có thể dể dàng triển khai mã bằng python như sau
 
+```python
+def lost_softmax(X, Y, W):
+    """
+    Hàm mất mát của mô hình Softmax Regression
+    """
+    # Tính toán ma trận A bằng hàm softmax xây dựng ở trên
+    A = softmax(W.T.dot(X))
+    # Hàm trả về giá trị của hàm mất mất để chúng ta thực hiện tối ưu
+    return -np.sum(Y*np.log(A))
+```
+#### Tối ưu hàm mất mát bằng Stochastic gradient descent
+Với các hàm nền tảng được xây dựng ở trên, ở bước tiếp theo này chúng ta thực hiện xây dựng hàm cho mục đích tối ưu hàm mất mát dựa trên phương pháp Stochastic gradient descent để dần dần tính toán và cập nhật ma trận trong số **W** tiến tới tối thiểu hàm mất mát trong một khoảng tài nguyên cho phép
+```python
+def softmax_regression(X, y, W_init, eta, tol = 1e-4, max_count = 10000):
+    W = [W_init]    
+    C = W_init.shape[1]
+    Y = convert_labels(y, C)
+    it = 0
+    N = X.shape[1]
+    d = X.shape[0]
+    
+    count = 0
+    check_w_after = 20
+    while count < max_count:
+        # mix data 
+        mix_id = np.random.permutation(N)
+        for i in mix_id:
+            xi = X[:, i].reshape(d, 1)
+            yi = Y[:, i].reshape(C, 1)
+            ai = softmax(np.dot(W[-1].T, xi))
+            W_new = W[-1] + eta*xi.dot((yi - ai).T)
+            count += 1
+            # stopping criteria
+            if count%check_w_after == 0:                
+                if np.linalg.norm(W_new - W[-check_w_after]) < tol:
+                    return W
+            W.append(W_new)
+    return W
+```
+#### Các hàm hổ trợ khác 
+1. Hàm Softmax Regression là một thuật toán được sử dụng dần cho bài toán phần lớp đặc biệt dần cho bài toán đa lớp, và bài toán sẽ được tối ưu hơn về mặt biểu diển và tính toán dựa trên các mã hóa các output hay label bằng one-hot encoding, với mỗi output sẽ không còn là một giá trị tương ứng với mỗi class nữa mà được biểu diển bằng một vector có đúng 1 phần tử bằng 1, các phần tử còn lại bằng 0. Phần tử bằng 1 năm ở vị trí tương ứng với class đó, thể hiện rằng điểm dữ liệu đang xét rơi vào class này với xác suất bằng 1 ví dụ với một điểm dữ liệu có label là là class thứ 2 trong một tập dữ liệu có 3 class, dó đó nó được biểu diển bằng một vector ```[o, 1, 0]``` 
+2.  Hàm dự đoán `pred` dựa trên các tham số đầu vào ma trận trọng số **W** và ma trận tập các điểm dư liệu **X** với kết quả lần lượt là một vector dư đoán lớp của các điểm dử liệu đâu vào 
+```python
+def pred(W, X):
+    """
+    predict output of each columns of X
+    Class of each x_i is determined by location of max probability
+    Note that class are indexed by [0, 1, 2, ...., C-1]
+    """
+    A = softmax_stable(W.T.dot(X))
+    
+    return np.argmax(A, axis = 0)
+```
 ## 4. BÀI TẬP
-
+Ứng dụng các bước triển khai mã nguồn ở trên và dựa vào phân tích, trực quán hóa dữ liệu
 
 
 ## 5. KẾT LUẬN
+Mô hình Softmax Regression với ưu điểm là được sử dụng trong bài toán phân loại cho đa lớp, nên mô hình Softmax Regression là một trong những mô hình phổ biển được dùng hiện này. Ngoài ra thuật toán Softmax đặc biệt được sử dụng nhiều trong các mạng Neural có nhiều lớp, với những lớp trước được sử dụng cho mục đích trích xuất đặc trưng và lớp cuối cùng cho bài toán phần lớp là mô hình Softmax Regression
 
 ## THAM KHẢO
 1. http://deeplearning.stanford.edu/tutorial/supervised/SoftmaxRegression/
