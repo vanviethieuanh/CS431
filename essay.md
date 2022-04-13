@@ -247,8 +247,70 @@ def pred(W, X):
     return np.argmax(A, axis = 0)
 ```
 ## 4. BÀI TẬP
-Ứng dụng các bước triển khai mã nguồn ở trên và dựa vào phân tích, trực quán hóa dữ liệu
+Ứng dụng các bước triển khai mã nguồn ở trên và dựa vào phân tích, trực quán hóa dữ liệu chúng ta tiến hành thực hiện bài tập phân lớp với mục tiêu đề ra là với dữ liệu đầu vào là các trường thông tin fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density,       pH, sulphates, alcohol thì có thể phân loại ra chất lượng rượu `quality` nằm trong khoảng từ **3 đến 8** hay thuộc vào các label `[3, 4, 5, 6, 7, 8]`, tuần tự các bước thực thực hiện được bao gồm:
+### Chuẩn bị, phân tích dữ liệu và tiền sử lý dữ liệu 
+Trong bài tập mẫu này chúng ta sử dụng bộ dữ liệu [Red Wine Quality](https://www.kaggle.com/datasets/uciml/red-wine-quality-cortez-et-al-2009?fbclid=IwAR0YYLnFmvLO3FQnGK-Du__-filz1h8-zDwVI3MKbeZM9xfE4_wdRiqQoiM) và thông tin về trực quán hóa và phân tích dữ liệu đã được trình bài cụ thẻ ở mục trên
+### Huấn luyện mô hình và kết quả 
+1. Ở bước tiêp theo này, chúng ta chia tập dữ liệu thành 2 phần bao gồm tập train và tập test với tỉ lệ là 8:2 để phục vụ cho múc đích huấn luyện và đánh giá mô hình 
+```python
+# tập dữ liệu train 
+df_train = df.sample(frac=0.8, random_state=1)
+# tập dữ liệu test 
+df_test=df.drop(df_train.index)
+```
+2. Tiếp theo chúng ta tách dữ liệu thành các trường đầu vào input và output
+```python
+### tập dữ liệu train
+# ma trận X 
+y_train = df_train['quality']
+# vector y chứa các label phân lớp
+X_train = df_train.drop(columns=['quality'])
+### tập dữ liệu test
+# ma trận X
+y_test = df['quality']
+# vector y chứa các label phân lớp
+X_test = df.drop(columns=['quality'])
+```
+3. Bước kế tiếp, chúng ta chuẩn hóa dữ liệu bằng phương pháp **StandardScaler** để tăng độ hiệu quả cho mô hình 
+```python
+###StandardScaler
+std_scaler = StandardScaler()
+df_train_scaled = std_scaler.fit_transform(X_train.to_numpy())
+# reshape lại ma trận để phù hợp cho đầu vào của tham số cho hàm huốn luyện
+X_train_scaled = df_train_scaled.T
+```
+Sau khi chuẩn hóa dữ liệu ta thu được một ma trận **X** `df_train_scaled` phục vụ cho việc huấn luyện mô hình
+4. Huận luyện mô hình
+```python
+```
+5. Kết quả
+```python
+ 
+df_test_scaled = std_scaler.transform(X_test.to_numpy())
+ 
+X_test_scaled = df_test_scaled.T
+X_test_scaled.shape
+quality_predict = pred(W[-1],X_test_scaled)
+```
+Đánh giá kết quả của mô hình 
+```python
+from sklearn.metrics import classification_report
+print(classification_report(y_test, quality_predict))
+``` 
+```txt
+  precision    recall  f1-score   support
 
+           3       0.00      0.00      0.00        10
+           4       0.13      0.21      0.16        53
+           5       0.67      0.72      0.70       681
+           6       0.55      0.49      0.52       638
+           7       0.30      0.31      0.30       199
+           8       0.06      0.06      0.06        18
+
+    accuracy                           0.55      1599
+   macro avg       0.29      0.30      0.29      1599
+weighted avg       0.55      0.55      0.55      1599
+```
 
 ## 5. KẾT LUẬN
 Mô hình Softmax Regression với ưu điểm là được sử dụng trong bài toán phân loại cho đa lớp, nên mô hình Softmax Regression là một trong những mô hình phổ biển được dùng hiện này. Ngoài ra thuật toán Softmax đặc biệt được sử dụng nhiều trong các mạng Neural có nhiều lớp, với những lớp trước được sử dụng cho mục đích trích xuất đặc trưng và lớp cuối cùng cho bài toán phần lớp là mô hình Softmax Regression
