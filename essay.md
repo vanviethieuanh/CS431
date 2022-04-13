@@ -334,6 +334,5 @@ Mô hình Softmax Regression với ưu điểm là được sử dụng trong b�
 ## THAM KHẢO
 1. http://deeplearning.stanford.edu/tutorial/supervised/SoftmaxRegression/
 2. https://machinelearningcoban.com/2017/02/17/softmax/
-3. https://pic.plover.com/MISC/symbols.pdf
-4. https://colab.research.google.com/drive/1jZIHiTE7yYBr5-OdxAxjbBeZ0YbM1rKD?usp=sharing
-5. https://colab.research.google.com/drive/1MY0luobtabpuV1eB10gtmovyu1ImpCxy?usp=sharing
+3. https://colab.research.google.com/drive/1jZIHiTE7yYBr5-OdxAxjbBeZ0YbM1rKD?usp=sharing
+4. https://colab.research.google.com/drive/1MY0luobtabpuV1eB10gtmovyu1ImpCxy?usp=sharing
