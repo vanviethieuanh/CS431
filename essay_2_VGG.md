@@ -1,7 +1,44 @@
-# Kể 1 câu chuyện theo sườn sau: problem - why - solution
+## 
+### Giai đoạn sơ khởi
+Ý tưởng ban đầu của mạng thần kinh nhận tạo cũng như nhiều phát minh nổi tiếng khác của con người, được xây dựng dựa trên nhưng khám phá từ thế giới tự nhiên, và hiển nhiên mạng lưới thần kinh nhân tạo bắt đầu như một mô hình về cách các tế bào thần kinh trong não hoạt động. 
+Khởi điểm vào năm 1943, nhà sinh lý học thần kinh Warren McCulloch và nhà toán học Walter Pitts đã sử dụng các mạch điên đơn giản để mô phỏng các hành vi thông minh, ý tưởng được đẩy đi xa hơn vào năm 1949 The Organization of Behaviour đề xuất rằng các đường dẫn thần kinh được tăng cường qua mỗi lần được kích hoạt liên tiếp nhau, từ đó đến mô phỏng lại  các quá trình phức tạp của não.
 
-## 1. Tìm hiểu vấn đề mà thuật toán này cần giải quyết (vì sao có CNN chẳng hạn?). Nêu tiền thân các mô hình đã có trước VGG. Tại sao các mô hình đó không hiệu quả? Giải pháp sử dụng cho các mô hình trước đó
+Từ năm 1950, các nha khoa học bắt đầu đưa các mạng đơn giản này lên hệ thống máy tính, và cũng trong khoảng thời gian này với sự giúp sức của các nhà khoa học thần kinh, đã đề xuất ra ý tưởng về Perceptron vào 1958, để giải thích các quá trình quyết định phức tạp trong não bằng cách sử dụng một cổng ngưỡng tuyến tính, lấy tổng có trọng số và trả về ‘0’ nếu kết quả dưới ngưỡng và ‘1’ nếu không. Và hiểu nhiên nhược điểm lớn nhất của Perceptron, chỉ  có thể học cách tách các lớp có thể phân tách tuyến tính, làm cho đơn giản nhưng phi tuyến tính trở thành một rào cản lớn 
 
+![percertron](/Images/VGG/percertron.PNG)
+
+Mọi thứ chỉ bắt đầu có tiến triển vào năm 1959, Bernard Widrow và Marcian Hoff đã phát triển mạng thần kinh nhân tạo đầu tiên áp dụng thành công cho một vấn đề trong thế giới thực. Các hệ thống này được đặt tên là ADALINE và MADALINE  Đặc biệt ở điểm là những tế bào thần kinh nhân tạo này khác với các perceptron chúng trả về dưới dạng đầu ra, trong trường hợp này là đầu vào có trọng số. 
+Nhưng nó củng chỉ là cải tiển nhỏ trông hàng tá rào cản này đến rào cản khác còn vướng mặt khi đó, những thành công ban đầu này đã làm tăng khả năng và tiềm năng của mạng thần kinh, mọi thứ vần dần tiền triển chậm chạp trong giai đoạn này, hày còn được gọi là "mua đông AI" khi tiền đầu tư cạn kiệt, sự quan tâm của xã hội nguội lạnh và nghiên cứu AI gần như không có tiến triển lớn.
+
+Sự tan băng của mùa đông kéo dài hàng thập kỷ này bắt đầu vào năm 1982 tại Học viện Khoa học Quốc gia khi Jon Hopfield trình bày bài báo của mình Hopfield Net và trong khi cùng năm tại hội nghị Mỹ-Nhật, Nhật Bản đã công bố dự định bắt đầu nỗ lực thế hệ tiếp theo trên Mạng thần kinh. Điều này khiến nguồn tài chính bắt đầu chảy trở lại từ sự đầu từ của các quốc gia lo sợ bị bỏ lại phía sau. Không lâu sau, Viện Vật lý Hoa Kỳ, vào năm 1985 đã thành lập cuộc họp thường niên “Neural Networks in Computing”, sau đó là Hội nghị quốc tế đầu tiên về Neural Networks by the Institute of Electrical and Electronic Engineers (IEEE) tổ chức vào năm 1987.
+
+![IEEE](/Images/VGG/IEEE.PNG)
+
+Tuy nhiên, một khám phá khác đã giúp mạng lưới thần kinh thoát ra sự bế tắc. Backpropagation, một phương pháp được các nhà nghiên cứu nghĩ ra từ những năm 60 và liên tục được phát triển cho đến mùa đông AI, Backpropagation cùng với Gradient Descent tạo thành xương sống và sức mạnh của mạng thân kinh nhân tạo. Trong khi Gradient Descent liên tục cập nhật và di chuyển các trọng số về phía mức tối thiểu của hàm mất mát, thì sự lan truyền ngược đánh giá gradient chi phí mất mát w.r.t. trọng số, độ lớn và hướng của chúng được sử dụng bởi gradient để đánh giá kích thước và hướng của các hiệu chỉnh đối với các thông số trọng số.
+
+![Gradient_descend](/Images/VGG/Gradient_descend.png)
+
+Và do đó, vào những năm 1990, mạng Neural  đã quay trở lại, lần này thực sự bắt kịp trí tưởng tượng của thế giới và cuối cùng đã ngang bằng với, nếu không muốn nói là vượt qua kỳ vọng của nó. 
+### Giai đoạn nhảy vọt 
+Trước hết vào năm 1980, một kiến trúc giới thiếu các khái niệm mới về trích xuất đặc trưng(feature extraction) bao gồm các lớp pooling và các lớp convolution, đầy cũng chính lác các phần thần chính của mạng mạng nhân tạo tính chập(CNN). Do đó Neocognitron  là kiến trúc đầu tiền của loại lớp này hay là tiền thân sớm nhất của mạng nhân tạo tính chấp. Điều đặc biệt của mạng kiến trúc này là nó cũng dựa trên cảm hứng về cấu tạo tự nhiên của cấu trúc phần kinh thị giác ở các loại động vật cấp cao. Cấu trúc của mạng xây dựng luân phiên từ các lớp của tê bào C và tế bào S,các tế bào là các phép toán học. Các “ô S”nằm ở lớp đước kết nối với các i “ô C” nằm ở lớp tiếp theo của mô hình. Ý tưởng tổng thể là các đặc trưng cục bộ được trích xuất trong các giai đoạn thấp hơn dần dần được tích hợp vào các đặc trưng toàn cầu hơn. Nó được sử dụng để nhận dạng ký tự viết tay (tiếng Nhật) và các nhiệm vụ nhận dạng mẫu khác.
+
+Dựa trên nền tảng kiến trúc Neocognitron, những kiến trúc phức tạp khác dần được ra đời với mục đích cải thiện và hoàn thiện trong việc sử lý ảnh. Mãi cho đến năm 1989, tên gọi về mạng thân kinh nhận tạo tính chấp mới thực sự bắt đầu dựa trên mạng kiến trúc LeNet-5 bởi Yann LeCun và các cộng sự. Nó được nâng cấp và phát triển tới năm 1998 với mục đích chính lúc đó là sử dụng vào việc phân loại chữ số viết tay và huấn luyện nó trên bộ dữ liệu MNIST. Tuy nhiên vào thời điểm đó do chưa có sự phát triển của dữ liệu và khả năng tính toán nên mạng CNN vẫn chưa có cơ hội bùng nổ, mãi đến năm 2009, Bộ dữ liệu ImageNet được giới thiệu và tạo ra sự thay đổi trong giới nghiên cứu. Đây là bộ dữ liệu lớn nhất so với các bộ dữ liệu từng có từ trước đến thời điểm đó. Với kích thước lên tới 1 triệu ảnh và phân bố đều trên 1000 nhãn.
+
+![ImageNet-logo](/Images/VGG/imagenet-logo.png)
+
+Từ năm 2010, dự án ImageNet thực hiện một cuộc thi phần mềm hàng năm, Thử thách nhận diện trực quan quy mô lớn của ImageNet (ImageNet Large Scale Visual Recognition Challenge – ILSVRC), nơi các thuật toán cạnh tranh để phân loại và phát hiện các đối tượng và cảnh vật một cách chính xác. Từ đó các kiến trục mạng CNNs mới đều đặc đánh giá độ hiệu quả và tín nhiệm dựa trên bộ dữ liệu ImageNet làm phép đo tiêu chuẩn. Hiệu suất được đo bằng test error rate. Năm 2010, test error rate là 28,2%, năm tiêp theo, các nhà nghiên cứu đã cải  từ 28,2% lên 25,8%
+
+![ImageNet](/Images/VGG/ImageNet.png)
+
+Vào năm 2012, Alex Krizhevsky và Geoffrey Hinton đã đưa ra một kiến trúc CNN phổ biến cho đến ngày nay là AlexNet, giúp giảm lỗi từ 25,8% xuống 16,4%, đây là một cải tiến đáng kể vào thời điểm đó, năm tiếp theo kiến trúc ZFNet là kiến trúc tiếp theo đặt được state of the art, đây là bản nâng cấp của mạng AlexNet dựa trên điều chỉnh các siêu tham số của mạng.
+
+![AlexNet](/Images/VGG/AlexNet.png)
+
+Chuyển sang năm 2014, một trong những đóng góp quan trọng mà năm 2014 chứng kiến là sự ra đời của một kiến trúc mới được gọi là VGGNet. VGGNet, được phát minh bởi Visual Geometry Group (tại Đại học Oxford). Với suy nghĩ rằng bằng cách làm cho CNN sâu hơn, người ta có thể giải quyết vấn đề tốt hơn và nhận đượctest error rate thấp hơn trong việc phân loại ImageNet. Nhiều kiến trúc có độ sâu khác nhau đã được thử nghiệm, với việc bằng cách tăng chiều sâu, mạng thân kinh có thể mô hình hóa nhiều điểm phi tuyến tính hơn, giúp tăng và cải thiện các đặc trưng hơn cho việc huấn luyện
+
+![VGGnet](/Images/VGG/VGGnet.jpg)
+
+Trong thế giới của mạng thần kinh nhân tạo, mạng nhân tạo tính chập(CNN) là một phân nhân lớn trong đại gia đình, và cũng tùy thuộc vào nhiệm vụ và các ràng buộc tương ứng, ngày nay có rất nhiều loại kiến trúc khác nhau. Được sử dụng rộng rãi trong các lĩnh vực khác nhau, và đặc biệt được sử dụng phổ biến nhất trong phân tính ảnh. Kể từ khi được khám phá, kiến trúc mạng CNN đã trải qua các bước phát triển nhanh chóng và trong những năm gần đây đã đạt được kết quả mà trước đây là điều bất khả thi. 
 ## 2 Tìm hiểu về vgg.
 
 Tiếp theo ta sẽ tìm hiểu sâu hơn về mô hình VGGNet, một kiến trúc mạng nơ-ron tích chập cổ điển (CNN). VGG được phát triển để tăng độ sâu của các CNN như vậy nhằm tăng hiệu suất của mô hình.
@@ -14,9 +51,9 @@ VGG là viết tắt của Visual Geometry Group; nó là một kiến trúc M�
 
 Kiến trúc VGG là cơ sở của các mô hình nhận dạng đối tượng mang tính đột phá. Được phát triển như một mạng nơ-ron sâu, VGGNet cũng vượt qua các đường cơ sở về nhiều tác vụ và bộ dữ liệu ngoài ImageNet. Hơn nữa, bây giờ nó vẫn là một trong những kiến trúc nhận dạng hình ảnh phổ biến nhất.
 
-<img src="/Images/VGG/vgg-neural-network-architecture.png" alt="VGG-neural-network-architecture"/>
+![VGG-neural-network-architecture](/Images/VGG/vgg-neural-network-architecture.png)
 
-Kiến trúc mạng thần kinh VGG
+##Kiến trúc mạng thần kinh VGG
 
 ### VGG16 là gì?
 
