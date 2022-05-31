@@ -1,10 +1,13 @@
 <h1 align="center"><b>KIẾN TRÚC MẠNG VGG</b></h1>
-<br>
-Danh sách thành viên: <br>
-1. Văn Viết Hiếu Anh - 19521225 <br>
-2. Lê Văn Phước - 19522054 <br>
-3. Văn Viết Nhật - 19521958 <br>
-<br>
+<h6 align="center"><b>Danh sách thành viên</b></h6>
+
+| Họ và tên         | MSSV     |
+| ----------------- | -------- |
+| Văn Viết Hiếu Anh | 1952122  |
+| Lê Văn Phước      | 19522054 |
+| Văn Viết Nhật     | 19521958 |
+
+
 
 ## 1. Sơ lược về quá trình phát triển mạng thần kinh nhân tạo
 
