@@ -62,7 +62,7 @@ Chuyển sang năm 2014, một trong những đóng góp quan trọng mà năm 2
 
 Trong thế giới của mạng thần kinh nhân tạo, mạng nhân tạo tính chập(CNN) là một phân nhân lớn trong đại gia đình, và cũng tùy thuộc vào nhiệm vụ và các ràng buộc tương ứng, ngày nay có rất nhiều loại kiến trúc khác nhau. Được sử dụng rộng rãi trong các lĩnh vực khác nhau, và đặc biệt được sử dụng phổ biến nhất trong phân tính ảnh. Kể từ khi được khám phá, kiến trúc mạng CNN đã trải qua các bước phát triển nhanh chóng và trong những năm gần đây đã đạt được kết quả mà trước đây là điều bất khả thi. 
 
-## 2. Tìm hiểu về vgg.
+## 2. Kiến trúc mạng VGG
 
 Tiếp theo ta sẽ tìm hiểu sâu hơn về mô hình VGGNet, một kiến trúc mạng nơ-ron tích chập cổ điển (CNN). VGG được phát triển để tăng độ sâu của các CNN như vậy nhằm tăng hiệu suất của mô hình.
 
