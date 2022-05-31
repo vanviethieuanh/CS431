@@ -7,7 +7,7 @@
 | Lê Văn Phước      | 19522054 |
 | Văn Viết Nhật     | 19521958 |
 
-
+[toc]
 
 ## 1. Sơ lược về quá trình phát triển mạng thần kinh nhân tạo
 
@@ -148,6 +148,7 @@ Có một vài lớp tích chập theo sau là một lớp gộp làm giảm chi
   <img src="/Images/VGG/VGG-16-architecture-of-the-model.png" alt="VGG-16-architecture-of-the-model"/>
 </p>
 
+
 <p align="center">
   Kiến trúc VGG-16 của mô hình VGG16
 </p>
@@ -185,3 +186,91 @@ ResNet, còn được gọi là Mạng dư, không cho phép sự cố gradient 
 
 ## 3. Cài đặt thực nghiệm trên code tensorflow
 
+Để đánh giá khách quan tính hiệu quả của VGG so với CNN truyền thống, ta sẽ tiến hành cài đặt và so sánh trên cùng một bộ dữ liệu.
+
+Bộ dữ liệu được nhóm sử dụng là MNIST, đây là bộ dữ liệu cơ bản, ta chỉ sử dụng vì đơn giản và dễ dàng hơn cho việc cài đặt. Nhớ rằng, mục tiêu chúng ta là so sánh 2 mô hình!
+
+Để cài đặt và điều chỉnh bộ dữ liệu này, các thao tác thực hiện tương đối dễ:
+
+```python
+# Sau khi import tensorflow
+import tensorflow as tf
+
+# Ta có thể load bộ dữ liệu bằng 1 lệnh duy nhất
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# Để thực nghiệm ta tiến hành scale dữ liệu về khoảng [0,1]
+x_train = tf.keras.utils.normalize(x_train, axis=1)
+x_test = tf.keras.utils.normalize(x_test, axis=1)
+```
+
+Vậy, ta đã hoành thành bước tải bộ dữ liệu!
+
+Để tiện theo dõi, xin được quy ước cách tóm tắt model như sau:
+
+- C: Là kí hiệu cho `Conv2D` Layer, trước C là số `filters` và số ngay sau C là `kernel_size`. Ví dụ `24C5` có nghĩa là 24 filters với khích thước của mỗi filter là `5x5`
+- P: `MaxPooling2D` layer với một số ngay sau là kích thước pooling. Ví dụ: `P2` là `MaxPooling2D` với khích thước pooling là `2x2`
+- F: Flatten Layer
+- Các số đứng riêng lẻ biểu thị cho Dense layer với lượng node tương ứng với con số đó
+
+Việc cài đặt VGG tương đối dễ, tương tự với việc cài đặt mạng CNN cơ bản như chúng ta thường làm với thư viện Keras:
+
+```python
+# CNN - [24C5-P2]-[48C5-P2] - F - 256 - 1
+cnn = Sequential()
+
+cnn.add(Conv2D(24, kernel_size=5, activation='relu', padding='same', input_shape=(28,28,1)))
+cnn.add(MaxPooling2D())
+
+cnn.add(Conv2D(48, kernel_size=5, activation='relu', padding='same'))
+cnn.add(MaxPooling2D())
+
+cnn.add(Flatten())
+cnn.add(Dense(256, activation='relu'))
+cnn.add(Dense(1, activation='softmax'))
+
+cnn.compile(optimizer='nadam', loss='categorical_crossentropy', metrics=['accuracy'])
+```
+
+ta chỉ cần thay đổi `kernel_size` thành `3x3` và chồng 2 layer này sát nhau là đã hoàn thành molder VGG tương đương để thực nghiệm, sau khi thay đổi thì biến model sẽ trở thành như sau:
+
+```python
+# VGG - [24C3-24C3-P2]-[48C3-48C3-P2] - F - 256 - 1
+vgg = Sequential()
+
+vgg.add(Conv2D(24, kernel_size=3, activation='relu', padding='same', input_shape=(28,28,1)))
+vgg.add(Conv2D(24, kernel_size=3, activation='relu', padding='same'))
+vgg.add(MaxPooling2D())
+
+vgg.add(Conv2D(48, kernel_size=3, activation='relu', padding='same'))
+vgg.add(Conv2D(48, kernel_size=3, activation='relu', padding='same'))
+vgg.add(MaxPooling2D())
+
+vgg.add(Flatten())
+vgg.add(Dense(256, activation='relu'))
+vgg.add(Dense(1, activation='softmax'))
+
+vgg.compile(optimizer='nadam', loss='categorical_crossentropy', metrics=['accuracy'])
+```
+
+Sau khi đã có được 2 model, để thực thi model ta dùng lệnh fit như các model khác để kiểm tra kết quả:
+
+```python
+cnn_history = cnn.fit(x_train,y_train, batch_size=128, epochs = 50, 
+        validation_data = (x_test,y_test), verbose=1)
+
+vgg_history = vgg.fit(x_train,y_train, batch_size=128, epochs = 50, 
+        validation_data = (x_test,y_test), verbose=1)
+```
+
+<p align="center">
+  <img src="/Images/VGGvCNN.png" alt="VGG-16-architecture-of-the-model"/>
+</p>
+
+Trên đây là kết quả so sánh Accuracy của 2 model, dễ thấy rằng sau thời gian train dài hơi, VGG thể hiện tính tối ưu của mình trong việc tránh overfitiing so với CNN thông thường do trích xuất được nhiều đặc trưng hơn. Tuy nhiên điều này không thể hiện rõ do MNIST là một bộ dữ liệu tương đối đơng giản.
+
+Qua các bước thực hiện ở trên, chúng ta có thể hiểu thêm và nắm rõ hơn  về cấu trúc cũng như cách sử dụng thư viện Keras để cài đặt và thực nghiệm với mô hình VGG.
+
+## 4. Kết luận
+
+Mô hình VGG với ưu điểm sử dụng các Conv layer nhỏ chồng lên nhau đã thể hiện ưu điểm của mình khi trích xuất được nhiều đặc trưng hơn, giảm tình trạng overfiting. Tuy nhiên trên thực tế thì việc train model này cũng tốn nhiều tài nguyên hơn so với mô hình CNN thông thường.
