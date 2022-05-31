@@ -1,5 +1,9 @@
 <h1 align="center"><b>KIẾN TRÚC MẠNG VGG</b></h1>
 <br>
+Danh sách thành viên:
+1. Văn Viết Hiếu Anh - 19521225
+2. Lê Văn Phước - 19522054
+3. Văn Viết Nhật - 19521958
 <br>
 
 ## 1. Sơ lược về quá trình phát triển mạng thần kinh nhân tạo
