@@ -74,9 +74,11 @@ VGG là viết tắt của Visual Geometry Group; nó là một kiến trúc M�
 
 Kiến trúc VGG là cơ sở của các mô hình nhận dạng đối tượng mang tính đột phá. Được phát triển như một mạng nơ-ron sâu, VGGNet cũng vượt qua các đường cơ sở về nhiều tác vụ và bộ dữ liệu ngoài ImageNet. Hơn nữa, bây giờ nó vẫn là một trong những kiến trúc nhận dạng hình ảnh phổ biến nhất.
 
-![VGG-neural-network-architecture](/Images/VGG/vgg-neural-network-architecture.png)
+<p align="center">
+  <img src="/Images/VGG/vgg-neural-network-architecture.png" alt="vgg-neural-network-architecture"/>
+</p>
 
-##Kiến trúc mạng thần kinh VGG
+Kiến trúc mạng thần kinh VGG
 
 ### VGG16 là gì?
 
@@ -86,7 +88,9 @@ Mô hình VGG16 đạt được độ chính xác gần như 92,7% trong bài ki
 
 Như đã đề cập ở trên, VGGNet-16 hỗ trợ 16 lớp và có thể phân loại hình ảnh thành 1000 loại đối tượng, bao gồm bàn phím, động vật, bút chì, chuột, v.v. Ngoài ra, mô hình này có kích thước đầu vào hình ảnh là 224 x 224.
 
-<img src="/Images/VGG/vgg16-deep-learning-objects.png" alt="Example-for-VGG16"/>
+<p align="center">
+  <img src="/Images/VGG/vgg16-deep-learning-objects.png" alt="Example-for-VGG16"/>
+</p>
 
 Ứng dụng pháp hiện đối tượng thời gian thực
 
@@ -98,7 +102,9 @@ Khái niệm về mô hình VGG19 (cũng là VGGNet-19) giống với VGG16 ngo�
 
 VGGNets dựa trên các tính năng thiết yếu nhất của mạng nơ-ron tích tụ (CNN). Hình ảnh sau đây cho thấy khái niệm cơ bản về cách thức hoạt động của CNN:
 
-<img src="/Images/VGG/how-vgg-works-convolutional-neural-network.png" alt="How-vgg-works-convolutional-neural-network"/>
+<p align="center">
+  <img src="/Images/VGG/how-vgg-works-convolutional-neural-network.png" alt="How-vgg-works-convolutional-neural-network"/>
+</p>
 
 Kiến trúc của mạng nơ-ron hợp hiến: Dữ liệu hình ảnh là đầu vào của CNN, đầu ra của mô hình cung các các lớp dự đoán cho hình ảnh đầu vào.
 
@@ -111,7 +117,9 @@ Hãy cùng tìm hiểu sơ lược về kiến trúc của VGG:
 + Các lớp ẩn: Tất cả các lớp ẩn trong mạng VGG đều sử dụng ReLU. VGG thường không tận dụng Chuẩn hóa phản hồi cục bộ (LRN) vì nó làm tăng mức tiêu thụ bộ nhớ và thời gian đào tạo. Hơn nữa, nó không cải thiện độ chính xác tổng thể.
 + Các lớp được kết nối đầy đủ: VGGNet có ba lớp được kết nối đầy đủ. Trong số ba lớp, hai lớp đầu tiên có 4096 kênh mỗi lớp và lớp thứ ba có 1000 kênh, mỗi lớp 1 kênh.
 
-<img src="/Images/VGG/fully-connected-layers.png" alt="Fully-connected-layers"/>
+<p align="center">
+  <img src="/Images/VGG/fully-connected-layers.png" alt="Fully-connected-layers"/>
+</p>
 
 Các lớp được kết nối đầy đủ
 
@@ -121,7 +129,9 @@ Số 16 trong tên VGG ám chỉ thực tế rằng nó là mạng nơ-ron sâu 
 
 Có một vài lớp tích chập theo sau là một lớp gộp làm giảm chiều cao và chiều rộng. Nếu chúng ta nhìn vào số lượng bộ lọc mà chúng ta có thể sử dụng, có khoảng 64 bộ lọc có sẵn, chúng ta có thể tăng gấp đôi lên khoảng 128 và sau đó là 256 bộ lọc. Trong các lớp cuối cùng, chúng ta có thể sử dụng 512 bộ lọc.
 
-<img src="/Images/VGG/VGG-16-architecture-of-the-model.png" alt="VGG-16-architecture-of-the-model"/>
+<p align="center">
+  <img src="/Images/VGG/VGG-16-architecture-of-the-model.png" alt="VGG-16-architecture-of-the-model"/>
+</p>
 
 Kiến trúc VGG-16 của mô hình VGG16
 
