@@ -78,7 +78,9 @@ Kiến trúc VGG là cơ sở của các mô hình nhận dạng đối tượng
   <img src="/Images/VGG/vgg-neural-network-architecture.png" alt="vgg-neural-network-architecture"/>
 </p>
 
-Kiến trúc mạng thần kinh VGG
+<p align="center">
+  Kiến trúc mạng thần kinh VGG
+</p>
 
 ### VGG16 là gì?
 
@@ -92,7 +94,9 @@ Như đã đề cập ở trên, VGGNet-16 hỗ trợ 16 lớp và có thể ph�
   <img src="/Images/VGG/vgg16-deep-learning-objects.png" alt="Example-for-VGG16"/>
 </p>
 
-Ứng dụng pháp hiện đối tượng thời gian thực
+<p align="center">
+  Ứng dụng pháp hiện đối tượng thời gian thực
+</p>
 
 ### VGG19 là gì?
 
@@ -106,7 +110,9 @@ VGGNets dựa trên các tính năng thiết yếu nhất của mạng nơ-ron t
   <img src="/Images/VGG/how-vgg-works-convolutional-neural-network.png" alt="How-vgg-works-convolutional-neural-network"/>
 </p>
 
-Kiến trúc của mạng nơ-ron hợp hiến: Dữ liệu hình ảnh là đầu vào của CNN, đầu ra của mô hình cung các các lớp dự đoán cho hình ảnh đầu vào.
+<p align="center">
+  Kiến trúc của mạng nơ-ron hợp hiến: Dữ liệu hình ảnh là đầu vào của CNN, đầu ra của mô hình cung các các lớp dự đoán cho hình ảnh đầu vào.
+</p>
 
 Mạng VGG được xây dựng với các bộ lọc chập rất nhỏ. VGG-16 bao gồm 13 lớp phức hợp và ba lớp được kết nối đầy đủ.
 
@@ -121,7 +127,9 @@ Hãy cùng tìm hiểu sơ lược về kiến trúc của VGG:
   <img src="/Images/VGG/fully-connected-layers.png" alt="Fully-connected-layers"/>
 </p>
 
-Các lớp được kết nối đầy đủ
+<p align="center">
+  Các lớp được kết nối đầy đủ
+</p>
 
 ### Kiến trúc VGG16
 
@@ -133,7 +141,9 @@ Có một vài lớp tích chập theo sau là một lớp gộp làm giảm chi
   <img src="/Images/VGG/VGG-16-architecture-of-the-model.png" alt="VGG-16-architecture-of-the-model"/>
 </p>
 
-Kiến trúc VGG-16 của mô hình VGG16
+<p align="center">
+  Kiến trúc VGG-16 của mô hình VGG16
+</p>
 
 ### Sự phức tạp và thách thức
 
