@@ -196,3 +196,162 @@ def getTestBatch():
     return arr, labels
 ```
 
+Bước thứ ba, xây dựng RNN Model với tensorflow. Đầu tiên chúng tôi sẽ khởi tạo các tham số cho mô hình mạng RNN với các cell là các LSTM. Kiến trúc mạng ở đây bao gồm 128 đơn vị cho mỗi lớp, số lượng layer là 2, số lượng phân lớp là 2 và số vòng lặp khi huấn luyện là 30000.
+
+```python
+# Khởi tạo tham số
+numDimensions = 300
+batchSize = 64
+lstmUnits = 128
+nLayers = 2
+numClasses = 2
+iterations = 30000
+```
+
+Để lưu trữ dữ liệu input và ouput, chúng ta sẽ sử dụng hai kiểu dữ liệu placeholder. Một trong những điều quan trọng nhất khi khởi tạo các biến input và output này là xác định kích thước của các tensor. Mỗi output của mạng (hay còn gọi là label) sẽ là một vector one hot với hai giá trị tương ứng với hai loại cảm xúc: [1, 0] cho positive và [0, 1] cho negative.
+
+<p align="center">
+  <img src="/Images/LSTM/data_batch.png" alt="data_batch"/>
+</p>
+
+Khởi tạo hai biến 'inputs' và 'labels' bằng kiểu placeholder.
+
+```python
+import tensorflow as tf
+tf.reset_default_graph()
+
+labels = tf.placeholder(tf.float32, [batchSize, numClasses])
+inputs = tf.placeholder(tf.int32, [batchSize, maxSeqLength])
+```
+
+Sau đó tạo dữ liệu word vector từ khối dữ liệu đầu vào với ma trận word embedding. Nếu như quá trình khởi tạo đúng thì sẽ tạo ra các kiểu dữ liệu sau:
+
+labels --> Tensor("Placeholder:0", shape=(64, 2), dtype=float32)
+
+inputs --> Tensor("Placeholder_1:0", shape=(64, 10), dtype=int32)
+
+<p align="center">
+  <img src="/Images/LSTM/embedding_data.png" alt="embedding_data"/>
+</p>
+
+```python
+data = tf.Variable(tf.zeros([batchSize, maxSeqLength, numDimensions]),dtype=tf.float32)
+data = tf.nn.embedding_lookup(wordVectors, inputs)
+```
+
+Như vậy sau bước này chúng ta đã có dữ liệu để đưa vào mạng mạng các LSTM. Để khởi tạo một LSTM chúng ta sử dụng hàm tf.nn.rnn_cell.BasicLSTMCell. Hàm này cần tham số đầu vào là số lượng đơn vị muốn khởi tạo. Đây chính là một hyperparamter đã được khởi tạo trước đó.
+Để chống lại việc overfitting, chúng ta sử dụng lớp dropout. 
+
+Để tăng tính phức tạp cho kiến trúc mạng chúng ta chồng các lớp LSTM lên nhau (Stack LSTM Layers). Trong trường hợp này chúng ta sử dụng 2 lớp LSTM. Việc chồng thêm các lớp LSTM sẽ giúp cho mô hình có khả năng nhớ nhiều thông tin hơn nhưng đồng thời cũng làm tăng số lượng tham số khi huấn luyện. Điều này cũng có nghĩa là sẽ làm tăng thời gian huấn luyện cũng như là cần thêm nhiều dữ liệu hơn.
+
+Cuối cùng là đưa toàn bộ dữ liệu đầu vào vào mạng các LSTM sử dụng hàm tf.nn.dynamic_rnn. Chi tiết kiến trúc mạng LSTM sử dụng cho bài tập này được mô tả trong hình sau:
+
+<p align="center">
+  <img src="/Images/LSTM/architecture.png" alt="architecture"/>
+</p>
+
+```python
+def generate_a_lstm_layer():
+    # Khởi tạo một LSTM layer với 'lstmUnits' unit sử dụng hàm tf.contrib.rnn.BasicLSTMCell
+
+    # Sau đó tạo một lớp dropout để chống overfitting với hệ số out_keep_prob bằng 0.75
+    # Sử dụng hàm tf.contrib.rnn.DropoutWrapper
+    cell = tf.contrib.rnn.BasicLSTMCell(lstmUnits)
+    cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=0.75)
+
+    return cell
+
+# Sau khi đã có hàm tạo một LSTM Layer, ta sử dụng hàm này để chồng các LSTM lên
+# Stack các LSTM layer với hàm tf.nn.rnn_cell.MultiRNNCell
+lm_cell = tf.nn.rnn_cell.MultiRNNCell([generate_a_lstm_layer() for _ in range(nLayers)], state_is_tuple=True)
+# Feed data variable vào mạng LSTM sử dụng hàm tf.nn.dynamic_rnn
+with tf.variable_scope('scope', reuse = tf.AUTO_REUSE ):
+    outputs, states = tf.nn.dynamic_rnn(lm_cell, data, dtype=tf.float32)
+print(outputs)
+```
+
+Sau khi ra khỏi mạng LSTM, biến outputs sẽ là một tensor có kích thước [batchSize x maxSeqLength x lstmUnits], cụ thể là [64 x 180 x 128].
+
+Sau đó, chúng ta chỉ lấy dữ liệu ở LSTM cell cuối cùng và cho đi qua lớp kết nối đầy đủ để phân loại thành 2 trạng thái. Chỉ số của LSTM cell cuối cùng là 179 (do có 180 cell theo chiều ngang)  nên để có thể lấy được giá trị ta sẽ chuyển vị về tensor có kích thước [maxSeqLength x batchSize x lstmUnits] hay [180 x 64 x 128]. Sử dụng hàm tf.gather để lấy tensor thứ 179 có kích thước [64 x 128] bao gồm 64 mẫu vector 128 chiều. Vector 128 chiều này sẽ được đưa vào lớp fully connected để chuyển đổi về vector 2 chiều tương ứng với 2 trạng thái.
+
+Lớp kết nối đầy đủ bao gồm các bộ tham số 'weight' và 'bias' để thực hiện việc dự đoán kết quả. Bước này chính là tạo một lớp Fully Connected như trong sơ đồ kiến trúc mạng LSTM.
+
+```python
+weight = tf.Variable(tf.truncated_normal([lstmUnits, numClasses]))
+bias = tf.Variable(tf.constant(0.1, shape=[numClasses]))
+
+# Lấy giá trị output tại LSTM cell cuối cùng
+outputs = tf.transpose(outputs, [1, 0, 2])
+last = tf.gather(outputs, int(outputs.get_shape()[0]) - 1)
+# Đưa qua mạng Fully Connected mà không có activation function
+prediction = (tf.matmul(last, weight) + bias)
+```
+
+Để xác định độ chính xác của hệ thống, ta đếm số lượng labels khớp với giá trị dự đoán (prediction). Sau đó tính độ chính xác bằng cách tính giá trị trung bình của các kết quả trả về đúng.
+
+```python
+correctResult = tf.equal(tf.argmax(prediction,1), tf.argmax(labels,1))
+accuracy = tf.reduce_mean(tf.cast(correctResult, tf.float32))
+```
+
+Sau đó chúng ta sẽ xác định hàm độ lỗi sử dụng softmax cross entropy được tính từ dữ liệu dự đoán và tập labels. Cuối cùng là chọn thuật toán tối ưu với tham số learning rate mặc định là 0.001. 
+
+```python
+loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, labels=labels))
+optimizer = tf.train.AdamOptimizer().minimize(loss)
+```
+
+Bước thứ tư, huấn luyện. Với mỗi vòng lặp, ta sẽ lấy ra một batch dữ liệu train để đưa vào mạng sử dụng `feed_dict`. với các tham số input và label là các placeholders. Bước huấn luyện này được lặp lại cho đến khi hết số lần cần huấn luyện.
+
+```python
+import datetime
+
+tf.summary.scalar('Loss', loss)
+tf.summary.scalar('Accuracy', accuracy)
+merged = tf.summary.merge_all()
+logdir = "tensorboard/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + "/"
+
+sess = tf.InteractiveSession()
+writer = tf.summary.FileWriter(logdir, sess.graph)
+saver = tf.train.Saver()
+sess.run(tf.global_variables_initializer())
+
+for i in range(iterations):
+    # Lấy batch tiếp theo
+    nextBatch, nextBatchLabels = getTrainBatch()
+    # Tối ưu optimizer
+    sess.run(optimizer, {inputs: nextBatch, labels: nextBatchLabels})
+    
+    # Viết summary bằng Tensorboard
+    # if (i % 50 == 0):
+    #     summary = sess.run(merged, {inputs: nextBatch, labels: nextBatchLabels})
+    #     writer.add_summary(summary, i)
+
+    # Save model every 2000 training iterations
+    if (i % 2000 == 0 and i != 0):
+        save_path = saver.save(sess, os.path.join(currentDir,"models/pretrained_lstm.ckpt"), global_step=i)
+        print("saved to %s" % save_path)
+writer.close()
+```
+
+Bước cuối cùng, load mô hình đã train và đánh giá mô hình. Thời gian huấn luyện mạng khá lâu, nên trong quá trình mạng đang được huấn luyện, ta sẽ lưu lại một số checkpoint. Để có thể test thử trên một checkpoint mới nhất ta sử dụng hàm tf.train.latest_checkpoint và truyền vào tên thư mục muốn lấy model mới nhất.
+
+```python
+sess = tf.InteractiveSession()
+saver = tf.train.Saver()
+saver.restore(sess, tf.train.latest_checkpoint(os.path.join(currentDir,'models')))
+```
+
+Sau đó, với mỗi batch dữ liệu test, ta sẽ tiến hành test và tính độ chính xác.
+
+```python
+# Kiểm tra thử trên 10 batches
+iterations = 10
+for i in range(iterations):
+    nextBatch, nextBatchLabels = getTestBatch()
+    # Tính độ chính xác 'accuracy' trên các test batch và gán vào 'test_acc'
+    test_acc = (sess.run(accuracy, {inputs: nextBatch, labels: nextBatchLabels})) * 100
+    print("Accuracy for this batch:", test_acc)
+```
+
+## Kết luận
