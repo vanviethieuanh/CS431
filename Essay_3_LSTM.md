@@ -159,7 +159,7 @@ for nf in negativeFiles:
         nFiles = nFiles + 1 
 
 print('Negative files are indexed!')
-# Lưu ma trận ids để sử dụng trong tương lai.
+# Lưu ma trận ids để sử dụng trong tương lai
 np.save(os.path.join(currentDir,'idsMatrix.npy'), ids)
 ```
 
@@ -345,7 +345,7 @@ saver.restore(sess, tf.train.latest_checkpoint(os.path.join(currentDir,'models')
 Sau đó, với mỗi batch dữ liệu test, ta sẽ tiến hành test và tính độ chính xác.
 
 ```python
-# Kiểm tra thử trên 10 batches
+# Kiểm tra thử trên 10 batch
 iterations = 10
 for i in range(iterations):
     nextBatch, nextBatchLabels = getTestBatch()
