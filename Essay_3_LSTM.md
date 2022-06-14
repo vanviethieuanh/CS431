@@ -7,7 +7,47 @@
 | Lê Văn Phước      | 19522054 |
 | Văn Viết Nhật     | 19521958 |
 
-## Lịch sử hình thành các kiến trúc RNN. Lý do tại sao cần các kiến trúc này? Nêu lý do vì sao cần các mô hình sau ( kiểu ví dụ từ mô hình RNN vì sao cần LSTM, mô hình RNN lúc đó tại sao ko tốt?)
+[toc]
+
+## 1 Sơ lược quá trình phát triển của LSTM
+
+### 1.1 Kiến trúc RNN
+
+#### 1.1.1 Dữ liệu dạng sequence
+
+Khi xử lý dữ liệu dạng chuỗi mà chuỗi này có sự tương quan với nhau theo thứ tự như câu từ, âm thanh, chuỗi hình ảnh hay một bài toán ví dụ như biến động giá cổ phiếu, ta biết rằng những dữ liệu dạng này có liên kết với nhau.
+
+Có một điểm nữa mà ta cần lưu ý đó ra con người ta không suy nghĩ ngắt quảng mỗi khi ta tiếp nhận những thông tin dữ liệu này. Ta thừa hưởng và lưu lại những thông tin trước đó để tiếp tục tiếp nhận thông tin mới. Ví như ta đi xem phim *Em và Trịnh* thì không chỉ xem mỗi đoạn giữa mà hiểu là tại sao Trịnh Công Sơn gặp và yêu Dao Ánh mà phải xem từ lúc Trịnh Công Sơn đi gặp Bích Diễm mới hiểu được.
+
+Vì lẽ đó những mô hình neural network truyền thống thì không thể thỏa mãn yêu cầu này, đó có thể coi là một khuyết điểm chính của mạng nơ-ron truyền thống.
+
+Mạng nơ-ron hồi quy (Recurrent Neural Network) sinh ra để giải quyết vấn đề đó. Mạng này chứa các vòng lặp bên trong cho phép thông tin có thể lưu lại được.
+
+#### 1.1.2 RNN
+
+Tất cả bắt đầu dựa trên Hopfield networks - một loại RNN đặc biệt \- được John Hopfield phát hiện (lại) vào năm 1982. Năm 1993, một hệ thống nén lịch sử thần kinh đã giải quyết một tác vụ "Very Deep Learning" yêu cầu hơn 1000 lớp tiếp theo trong một RNN được mở ra kịp thời.
+
+Trong vài năm gần đây, việc ứng dụng RNN đã đưa ra được nhiều kết quả không thể tin nổi trong nhiều lĩnh vực: nhận dạng giọng nói, mô hình hóa ngôn ngữ, dịch máy, mô tả ảnh,… Danh sách vẫn còn đang được mở rộng tiếp.
+
+Đằng sau sự thành công này chính là sự đóng góp của LSTM. LSTM là một dạng đặc biệt của mạng nơ-ron hồi quy, với nhiều bài toán thì nó tốt hơn mạng hồi quy thuần. Hầu hết các kết quả thú vị thu được từ mạng RNN là được sử dụng với LSTM. Trong bài viết này, ta sẽ cùng khám phá xem mạng LSTM là cái gì nhé.
+
+### 1.2 LSTM
+
+#### 1.2.1 Vấn đề phụ thuộc xa
+
+Một điểm nổi bật của RNN chính là ý tưởng kết nối các thông tin phía trước để dự đoán cho hiện tại. Việc này tương tự như ta sử dụng các cảnh Trịnh Công Sơn nhìn Dao Ánh để hiểu được tại sao ông mong chờ Dao Ánh đến vậy. Nếu mà RNN có thể làm được việc đó thì chúng sẽ cực kì hữu dụng, tuy nhiên liệu chúng có thể làm được không? Câu trả lời là *còn tùy*.
+
+Đôi lúc ta chỉ cần xem lại thông tin vừa có thôi là đủ để biết được tình huống hiện tại. Ví dụ xem một đoạn Dap Ánh khen tranh Trịnh Công Sơn vẽ đẹp thì cũng biết cô là người bọc tranh và Trịnh Công Sơn cảm kích điều đó. Trong tình huống này, khoảng cách tới thông tin có được cần để dự đoán là nhỏ, nên RNN hoàn toàn có thể học được.
+
+Nhưng trong nhiều tình huống ta buộc phải sử dụng nhiều ngữ cảnh hơn để suy luận. Về mặt lý thuyết, rõ ràng là RNN có khả năng xử lý các phụ thuộc xa (long-term dependencies). Chúng ta có thể xem xét và cài đặt các tham số sao cho khéo là có thể giải quyết được vấn đề này. Tuy nhiên, đáng tiếc trong thực tế RNN có vẻ không thể học được các tham số đó. Vấn đề này đã được khám phá khá sâu bởi Hochreiter (1991) và Bengio, et al. (1994), trong các bài báo của mình, họ đã tìm được nhưng lý do căn bản để giải thích tại sao RNN không thể học được.
+
+Tuy nhiên, rất cám ơn là LSTM không vấp phải vấn đề đó!
+
+#### 1.2.2 LSTM
+
+Mạng bộ nhớ dài-ngắn (Long Short Term Memory networks), thường được gọi là LSTM - là một dạng đặc biệt của RNN, nó có khả năng học được các phụ thuộc xa. LSTM được giới thiệu bởi Hochreiter & Schmidhuber (1997), và sau đó đã được cải tiến và phổ biến bởi rất nhiều người trong ngành. Chúng hoạt động cực kì hiệu quả trên nhiều bài toán khác nhau nên dần đã trở nên phổ biến như hiện nay.
+
+LSTM được thiết kế để tránh được vấn đề phụ thuộc xa (long-term dependency). Việc nhớ thông tin trong suốt thời gian dài là đặc tính mặc định của chúng, chứ ta không cần phải huấn luyện nó để có thể nhớ được. Tức là ngay nội tại của nó đã có thể ghi nhớ được mà không cần bất kì can thiệp nào.
 
 ## 2. Tìm hiểu về mạng thần kinh nhân tạo Long short-term memory
 Mạng Long short-term memory(LSTM) là một loại mạng thần kinh trong Recurrent neural network(RNN) có khả năng học trong các bài toán đầu vào là một trình tự hay một dạng chuỗi. Trước khi đi sâu vào chi tiết mạng LSTM, chúng ta sẽ giới thiệu qua về Recurrent neural network. Học sâu gồm 2 mô hình lớn chính là Convolutional Neural Network(CNN) được sử dụng cho các bài toán xử lý đầu vào là ảnh, tương tự với Recurrent neural network(RNN) được sử dụng cho bài toán đầu vào dử liệu dạng chuỗi(sequence)
