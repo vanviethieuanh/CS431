@@ -9,9 +9,16 @@
 
 ## Lịch sử hình thành các kiến trúc RNN. Lý do tại sao cần các kiến trúc này? Nêu lý do vì sao cần các mô hình sau ( kiểu ví dụ từ mô hình RNN vì sao cần LSTM, mô hình RNN lúc đó tại sao ko tốt?)
 
-## Tìm hiểu sâu về LSTM (giải thích kỹ các thành phần trong LSTM)
-
-## Cài đặt thực nghiệm trên tensorflow
+## 2. Tìm hiểu về mạng thần kinh nhân tạo Long short-term memory
+Mạng Long short-term memory(LSTM) là một loại mạng thần kinh trong Recurrent neural network(RNN) có khả năng học trong các bài toán đầu vào là một trình tự hay một dạng chuỗi. Trước khi đi sâu vào chi tiết mạng LSTM, chúng ta sẽ giới thiệu qua về Recurrent neural network. Học sâu gồm 2 mô hình lớn chính là Convolutional Neural Network(CNN) được sử dụng cho các bài toán xử lý đầu vào là ảnh, tương tự với Recurrent neural network(RNN) được sử dụng cho bài toán đầu vào dử liệu dạng chuỗi(sequence)
+### 2.1 Recurrent neural network 
+Như chúng ta đã biết, khi con người suy nghĩ hay đưa ra một quyết định nào đó, không thể đưa ra kết quả hợp lý từ khi bắt đầu suy nghĩ hay quyết định ngay tại thời điểm đó. Hoặc có thể hình dung đơn giản hơn khi đọc từng những dòng này, khi ta chỉ chỉ chọn một chữ trong dòng để đọc, ta không thể hiểu được nghĩa của nó được sử dụng là gì trong câu. Điều này đơn giản là vì khi ta suy nghĩ học đọc, chúng ta hiểu mỗi chữ ở đây dựa vào từ bạn đã hiểu các chữ trước đó chứ không phải là đọc tới đâu bỏ hết hết đi tới đó, rồi lại bắt đầu suy nghĩ lại từ đầu tới chữ bạn đang đọc. 
+### 2.2 Long short term memory (LSTM)
+#### 2.2.1 Ý tưởng xây dựng cốt lỏi của LSTM
+#### 2.2.2 Cơ chế hoạt động của LSTM
+#### 2.2.3 Kết luận 
+Dựa trên nhưng gì đã được tìm hiểu ở trên, có thể nói rằng LSTM là một mạng cải tiến của RNN nhằm giải quyết vấn đề nhớ các bước dài của RNN
+## 3. Cài đặt thực nghiệm trên tensorflow
 Tương tự như các bài toán khác, khi ta hiểu lý thuyết rồi thì cũng phải tiến hành áp dụng thì mới hiểu sâu được. Vì thế, phần này sẽ tiến hành cài đặt kiến trúc LSTM với tensorflow để mang lại cách nhìn cụ thể từng bước thực hiện khi cài đặt mô hình này như thế nào?
 
 Ta sẽ áp dụng kiến trúc LSTM này vào bài toán Phân tích cảm xúc (Sentiment Analysis) của người dùng trên tập dữ liệu văn bản. Nếu nhìn theo kiểu black box, đầu vào của bài toán là một câu hoặc đoạn văn bản và đầu ra là trạng thái tích cực, tiêu cực hay trung hoà (positive - negative - neutral). Trong bài toán này, chúng ta chỉ quan tâm đến hai trạng thái cảm xúc là positive và negative.
