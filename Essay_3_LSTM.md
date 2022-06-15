@@ -49,15 +49,98 @@ Mạng bộ nhớ dài-ngắn (Long Short Term Memory networks), thường đư�
 
 LSTM được thiết kế để tránh được vấn đề phụ thuộc xa (long-term dependency). Việc nhớ thông tin trong suốt thời gian dài là đặc tính mặc định của chúng, chứ ta không cần phải huấn luyện nó để có thể nhớ được. Tức là ngay nội tại của nó đã có thể ghi nhớ được mà không cần bất kì can thiệp nào.
 
+
+
 ## 2. Tìm hiểu về mạng thần kinh nhân tạo Long short-term memory
+
 Mạng Long short-term memory(LSTM) là một loại mạng thần kinh trong Recurrent neural network(RNN) có khả năng học trong các bài toán đầu vào là một trình tự hay một dạng chuỗi. Trước khi đi sâu vào chi tiết mạng LSTM, chúng ta sẽ giới thiệu qua về Recurrent neural network. Học sâu gồm 2 mô hình lớn chính là Convolutional Neural Network(CNN) được sử dụng cho các bài toán xử lý đầu vào là ảnh, tương tự với Recurrent neural network(RNN) được sử dụng cho bài toán đầu vào dử liệu dạng chuỗi(sequence)
+
 ### 2.1 Recurrent neural network 
-Như chúng ta đã biết, khi con người suy nghĩ hay đưa ra một quyết định nào đó, không thể đưa ra kết quả hợp lý từ khi bắt đầu suy nghĩ hay quyết định ngay tại thời điểm đó. Hoặc có thể hình dung đơn giản hơn khi đọc từng những dòng này, khi ta chỉ chỉ chọn một chữ trong dòng để đọc, ta không thể hiểu được nghĩa của nó được sử dụng là gì trong câu. Điều này đơn giản là vì khi ta suy nghĩ học đọc, chúng ta hiểu mỗi chữ ở đây dựa vào từ bạn đã hiểu các chữ trước đó chứ không phải là đọc tới đâu bỏ hết hết đi tới đó, rồi lại bắt đầu suy nghĩ lại từ đầu tới chữ bạn đang đọc. 
+
+#### 2.1.1 Mô hình Recurrent neural netword
+
+Như chúng ta đã biết, khi con người suy nghĩ hay đưa ra một quyết định nào đó, không thể đưa ra kết quả hợp lý từ khi bắt đầu suy nghĩ hay quyết định ngay tại thời điểm đó. Hoặc có thể hình dung đơn giản hơn khi đọc từng những dòng này, khi ta chỉ chỉ chọn một chữ trong dòng để đọc, ta không thể hiểu được nghĩa của nó được sử dụng là gì trong câu. Điều này đơn giản là vì khi ta suy nghĩ học đọc, chúng ta hiểu mỗi chữ ở đây dựa vào từ bạn đã hiểu các chữ trước đó chứ không phải là đọc tới đâu bỏ hết hết đi tới đó, rồi lại bắt đầu suy nghĩ lại từ đầu tới chữ bạn đang đọc. Tuy nhiên với các mạng thân kình nhân tạo truyền thống hay riêng với mạng Convolutional Neural Network thì để làm được điều này là bất khả thi.
+
+Do đó với sự ra đời của mạng Recurrent Neural Network còn một cách gọi khác là mạng thần kinh hồi quy, đã giải quyết được vấn đề đó. Với ý tưởng là mạng thần kinh lưu lại các thông tin bằng cách sử dụng các vòng lặp trong mạng.
+
+<p align="center">
+  <img src="/Images/LSTM/RNN-rolled.png"/>
+</p>
+
+
+Hình vẽ trên mô ta một đoạn của mạng thần kinh nhân tạo hồi quy <img src="https://render.githubusercontent.com/render/math?math=A"> với đầu vào là <img src="https://render.githubusercontent.com/render/math?math=x_t"> và đầu ra là <img src="https://render.githubusercontent.com/render/math?math=h_t">. Vòng lặp cho phép thông tin có thể truyền từ bước này qua bước khác trong cùng một mạng thần kinh.
+
+<p align="center">
+  <img src="/Images/LSTM/RNN-unrolled.png"/>
+</p>
+
+
+Có thể hình dung rằng một mạng nhân tạo thần kinh hồi quy là nhiều bản sao chép của một mạng nhân tạo thuần trong đó mỗi đầu ra của mạng này là đầu vào của một mạng sao chép khác
+
+<p align="center">
+  <img src="/Images/LSTM/LSTM3-SimpleRNN.png"/>
+</p>
+
+
+#### 2.1.2 Những vấn đề tồn tại trong mạng RNN
+
+Như đã được đề cập ở phần 1, về mặt lý thuyết, rõ ràng là RNN có khả năng xử lý các phụ thuộc xa bằng cách cài đặt và xem xét các siêu tham số chính sác để giải quyết vấn đề này. Tuy nhiên trong thực tế, đáng tiếng là mạng RNN không thể học được một cách hiệu quả các phụ thuộc xa.
+
 ### 2.2 Long short term memory (LSTM)
+
+Trong vài năm gần đây, dựa vào việc ứng dụng mạng RNN đã giúp giải quyết được nhiều vẫn đề ngoài sức tưỡng tượng trong nhiều lĩnh vực bao gồm: nhận dạng giọng nói, mô hình hóa ngôn ngữ, dịch máy, mô tả ảnh... .Đằng sau nhưng kết quả thành công tuyệt vời này là một phần không hề nhỏ sử đóng góp của mạng LSTM và cũng có thể gọi LSTM là một dạng đặc biệt của mạng thần kinh nhân tạo hồi quy.
+
 #### 2.2.1 Ý tưởng xây dựng cốt lỏi của LSTM
-#### 2.2.2 Cơ chế hoạt động của LSTM
-#### 2.2.3 Kết luận 
-Dựa trên nhưng gì đã được tìm hiểu ở trên, có thể nói rằng LSTM là một mạng cải tiến của RNN nhằm giải quyết vấn đề nhớ các bước dài của RNN
+
+Chìa khóa của LSTM là trạng thái tế bào (cell state). Trạng thái tế bào là một dạng giống như băng truyền. Nó chạy xuyên suốt tất cả các mắt xích (các nút mạng) và chỉ tương tác tuyến tính đôi chút. Vì vậy mà các thông tin có thể dễ dàng truyền đi thông suốt mà không sợ bị thay đổi.
+
+LSTM có khả năng bỏ đi hoặc thêm vào các thông tin cần thiết cho trạng thái tế báo, chúng được điều chỉnh cẩn thận bởi các nhóm được gọi là cổng (gate).
+
+Các cổng là nơi sàng lọc thông tin đi qua nó, Với ví dụ ở đây cho thấy rằng chúng được kết hợp bởi một tầng mạng sigmoid và một phép nhân.
+
+<p align="center">
+  <img src="/Images/LSTM/LSTM3-gate.png"/>
+</p>
+
+
+Tầng sigmoid sẽ cho đầu ra là một số trong khoản <img src="https://render.githubusercontent.com/render/math?math=[0,1]"> , mô tả có bao nhiêu thông tin có thể được thông qua. Khi đầu ra là <img src="https://render.githubusercontent.com/render/math?math=0"> thì có nghĩa là không cho thông tin nào qua cả, còn khi là <img src="https://render.githubusercontent.com/render/math?math=1"> thì có nghĩa là cho tất cả các thông tin đi qua nó.
+
+Mô hình LSTM gồm có 3 cổng như vậy để duy trì và điều hành trạng thái của tế bào.
+
+#### 2.2.2 Cơ chế hoạt động chi tiết của LSTM
+
+Bước đầu tiên của mô hình LSTM là quyết định xem thông tin nào cần được bỏ đi hay dữ lại trong trạng thái tế bào. Quyết định được đưa ra bời "tầng cổng quên"(forget gate layer). Nó lấy đầu vào 
+
+<p align="center">
+  <img src="/Images/LSTM/LSTM3-focus-f.png"/>
+</p>
+
+<p align="center">
+  <img src="/Images/LSTM/LSTM3-focus-i.png"/>
+</p>
+
+<p align="center">
+  <img src="/Images/LSTM/LSTM3-focus-C.png"/>
+</p>
+
+
+
+<p align="center">
+  <img src="/Images/LSTM/LSTM3-focus-o.png"/>
+</p>
+
+#### 2.2.3 Kết luận về mạng LSTM 
+
+Nhưng bước được mô tả ở trên là một trong nhưng mô hình LSTM phổ biến nhất, dựa vào ý tưỡng và cách xây dựng đã được thao luận, chúng ta có thể tự xây dựng một mô hình LSTM phiên bản cho riêng bản thân với nhưng nâng cấp và yêu cầu tùy chỉnh phù hợp. Sự khác nhau có không lớn, nhưng chúng giúp giải quyết phần nào đó trong cấu trúc của LTSM.
+
+<p align="center">
+  <img src="/Images/LSTM/LSTM3-var-GRU.png"/>
+</p>
+
+Trên đây là một trong nhưng biên thể của mạng LSTM có tên là Gated Recurrent Unit, hay GRU. Nó kết hợp các cổng loại trừ và đầu vào thành một cổng “cổng cập nhập” (update gate). Nó cũng hợp trạng thái tế bào và trạng thái ẩn với nhau tạo ra một thay đổi khác. Kết quả là mô hình của ta sẽ đơn giản hơn mô hình LSTM chuẩn và ngày càng trở nên phổ biến.
+
+Dựa trên nhưng gì đã được tìm hiểu ở trên, có thể nói rằng LSTM là một mạng cải tiến của RNN nhằm giải quyết vấn đề nhớ các bước dài của RNN. LSTM là một bước lớn trong việc sử dụng RNN. Ý tưởng của nó giúp cho tất cả các bước của RNN có thể truy vấn được thông tin từ một tập thông tin lớn hơn. Ví dụ, nếu bạn sử dụng RNN để tạo mô tả cho một bức ảnh, nó có thể lấy một phần ảnh để dự đoán mô tả từ tất cả các từ đầu vào. 
+
 ## 3. Cài đặt thực nghiệm trên tensorflow
 Tương tự như các bài toán khác, khi ta hiểu lý thuyết rồi thì cũng phải tiến hành áp dụng thì mới hiểu sâu được. Vì thế, phần này sẽ tiến hành cài đặt kiến trúc LSTM với tensorflow để mang lại cách nhìn cụ thể từng bước thực hiện khi cài đặt mô hình này như thế nào?
 
