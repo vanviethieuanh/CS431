@@ -88,9 +88,10 @@ Ngoài ra gradient biến mất(Vanishing gradient problem) và gradient bùng n
 
 ### 2.2 Long short term memory (LSTM)
 
-Trong vài năm gần đây, dựa vào việc ứng dụng mạng RNN đã giúp giải quyết được nhiều bài toán ngoài sức tưỡng tượng trong nhiều lĩnh vực bao gồm: nhận dạng giọng nói, mô hình hóa ngôn ngữ, dịch máy, mô tả ảnh... .Đằng sau nhưng kết quả thành công tuyệt vời này là một phần không hề nhỏ sử đóng góp của mạng LSTM và cũng có thể gọi LSTM là một dạng đặc biệt của mạng thần kinh nhân tạo hồi quy.
+Trong vài năm gần đây, dựa vào việc ứng dụng mạng RNN đã giúp giải quyết được nhiều bài toán ngoài sức tưởng tượng trong nhiều lĩnh vực bao gồm: nhận dạng giọng nói, mô hình hóa ngôn ngữ, dịch máy, mô tả ảnh... Đằng sau nhưng kết quả thành công tuyệt vời này là một phần không hề nhỏ sử đóng góp của mạng LSTM và cũng có thể gọi LSTM là một dạng đặc biệt của mạng thần kinh nhân tạo hồi quy.
 
 #### 2.2.1 Ý tưởng xây dựng cốt lõi của LSTM
+
 Mạng bộ nhớ dài-ngắn (Long Short Term Memory networks), thường được gọi là LSTM, là một dạng đặc biệt của RNN, nhằm mục đích giải quyết các vần đề tốn tại của RNN, dó đó LSTM được thiết kế để tránh vấn đề phụ thuộc xa và có đặc tính là nhớ thông tin trong suốt thời gian dài.
 Mọi mạng hồi quy đều có dạng là một chuỗi các mô-đun lặp đi lặp lại của mạng thần kinh nhân tạo. Với mạng RNN chuẩn, các mô-dun này có cấu trúc rất đơn giản, thường là một tầng <img src="https://render.githubusercontent.com/render/math?math=tanh">. LSTM kế thừa từ RNN và cũng có kiến trục mạng như vậy, nhưng các mô-đun trong nó có cấu trúc khác với mạng RNN chuẩn. Thay vì chỉ có một tầng mạng nơ-ron, chúng có tới 4 tầng tương tác với nhau một cách rất đặc biệt.
 Chìa khóa của LSTM là trạng thái tế bào (cell state). Trạng thái tế bào là một dạng giống như băng truyền. Nó chạy xuyên suốt tất cả các mắt xích (các nút mạng) và chỉ tương tác tuyến tính đôi chút. Vì vậy mà các thông tin có thể dễ dàng truyền đi thông suốt mà không sợ bị thay đổi.
@@ -122,31 +123,31 @@ Nó sẽ lấy đầu vào là <img src="https://render.githubusercontent.com/re
   <img src="/Images/LSTM/LSTM3-focus-i.png"/>
 </p>
 
-Ở bước tiếp theo là quyết định xem thông tin mới nào ta sẽ lưu vào trạng thái tế bào. Việc này gồm 2 phần. Đầu tiên là sử dụng một hàm <img src="https://render.githubusercontent.com/render/math?math=sigmoid"> được gọi là “tầng cổng vào” (input gate layer) để quyết định giá trị nào ta sẽ cập nhập. Tiếp theo là một tầng <img src="https://render.githubusercontent.com/render/math?math=tanh"> tạo ra một véc-tơ cho giá trị mới <img src="https://render.githubusercontent.com/render/math?math=C_t"> nhằm thêm vào cho trạng thái. Trong bước tiếp theo, ta sẽ kết hợp 2 giá trị đó lại để tạo ra một cập nhập cho trạng thái.
+Ở bước tiếp theo là quyết định xem thông tin mới nào ta sẽ lưu vào trạng thái tế bào. Việc này gồm 2 phần. Đầu tiên là sử dụng một hàm <img src="https://render.githubusercontent.com/render/math?math=sigmoid"> được gọi là “tầng cổng vào” (input gate layer) để quyết định giá trị nào ta sẽ cập nhật. Tiếp theo là một tầng <img src="https://render.githubusercontent.com/render/math?math=tanh"> tạo ra một véc-tơ cho giá trị mới <img src="https://render.githubusercontent.com/render/math?math=C_t"> nhằm thêm vào cho trạng thái. Trong bước tiếp theo, ta sẽ kết hợp 2 giá trị đó lại để tạo ra một cập nhập cho trạng thái.
 Tại bước kế tiếp này là cập nhật lại trạng thái của tế bào củ <img src="https://render.githubusercontent.com/render/math?math=C_{t-1}"> thành trạng thái tế bào mới <img src="https://render.githubusercontent.com/render/math?math=C_t">. Từ nhưng bước trước mô hình đã quyết định xem dữ lại bao nhiêu thông tin, lấy bao nhiêu thông tin, giờ chúng ta chỉ cần thực hiện là xong.
 
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-C.png"/>
 </p>
 
-Ta sẽ nhân trạng thái cũ với <img src="https://render.githubusercontent.com/render/math?math=f_{t}"> để bỏ đi những thông tin ta quyết định quên lúc trước. Sau đó cộng thêm <img src="https://render.githubusercontent.com/render/math?math=i_{t} * C_t">. Trạng thái mơi thu được này phụ thuộc vào việc ta quyết định cập nhập mỗi giá trị trạng thái ra sao
+Ta sẽ nhân trạng thái cũ với <img src="https://render.githubusercontent.com/render/math?math=f_{t}"> để bỏ đi những thông tin ta quyết định quên lúc trước. Sau đó cộng thêm <img src="https://render.githubusercontent.com/render/math?math=i_{t} * C_t">. Trạng thái mới thu được này phụ thuộc vào việc ta quyết định cập nhập mỗi giá trị trạng thái.
 
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-o.png"/>
 </p>
 
-Cuối cùng, ta cần quyết định xem ta muốn đầu ra là gì. Giá trị đầu ra sẽ dựa vào trạng thái tế bào, nhưng sẽ được tiếp tục sàng lọc. Đầu tiên, ta chạy một tầng chứa hàm <img src="https://render.githubusercontent.com/render/math?math=sigmoid"> để quyết định phần nào của trạng thái tế bào ta muốn xuất ra. Sau đó, ta đưa nó trạng thái tế bảo qua một hàm <img src="https://render.githubusercontent.com/render/math?math=tanh">  để co giá trị nó về khoảng<img src="https://render.githubusercontent.com/render/math?math=[-1,1]">, và nhân nó với đầu ra của cổng <img src="https://render.githubusercontent.com/render/math?math=sigmoid">  để được giá trị đầu ra ta mong muốn.
+Cuối cùng, ta cần quyết định xem ta muốn đầu ra là gì? Giá trị đầu ra sẽ dựa vào trạng thái tế bào, nhưng sẽ được tiếp tục sàng lọc. Đầu tiên, ta chạy một tầng chứa hàm <img src="https://render.githubusercontent.com/render/math?math=sigmoid"> để quyết định phần nào của trạng thái tế bào ta muốn xuất ra. Sau đó, ta đưa nó trạng thái tế bào qua một hàm <img src="https://render.githubusercontent.com/render/math?math=tanh">  để có giá trị nó về khoảng<img src="https://render.githubusercontent.com/render/math?math=[-1,1]">, và nhân nó với đầu ra của cổng <img src="https://render.githubusercontent.com/render/math?math=sigmoid">  để được giá trị đầu ra ta mong muốn.
 
 
 #### 2.2.3 Kết luận về mạng LSTM 
 
-Nhưng bước được mô tả ở trên là một trong nhưng mô hình LSTM phổ biến nhất, dựa vào ý tưỡng và cách xây dựng đã được thao luận, chúng ta có thể tự xây dựng một mô hình LSTM phiên bản cho riêng bản thân với nhưng nâng cấp và yêu cầu tùy chỉnh phù hợp. Sự khác nhau có không lớn, nhưng chúng giúp giải quyết phần nào đó trong cấu trúc của LTSM.
+Nhưng bước được mô tả ở trên là một trong nhưng mô hình LSTM phổ biến nhất, dựa vào ý tưỡng và cách xây dựng đã được thảo luận, chúng ta có thể tự xây dựng một mô hình LSTM phiên bản cho riêng bản thân với nhưng nâng cấp và yêu cầu tùy chỉnh phù hợp. Sự khác nhau có không lớn, nhưng chúng giúp giải quyết phần nào đó trong cấu trúc của LTSM.
 
 <p align="center">
   <img src="/Images/LSTM/LSTM3-var-GRU.png"/>
 </p>
 
-Trên đây là một trong nhưng biên thể của mạng LSTM có tên là Gated Recurrent Unit, hay GRU. Nó kết hợp các cổng loại trừ và đầu vào thành một cổng “cổng cập nhập” (update gate). Nó cũng hợp trạng thái tế bào và trạng thái ẩn với nhau tạo ra một thay đổi khác. Kết quả là mô hình của ta sẽ đơn giản hơn mô hình LSTM chuẩn và ngày càng trở nên phổ biến.
+Trên đây là một trong nhưng biến thể của mạng LSTM có tên là Gated Recurrent Unit, hay GRU. Nó kết hợp các cổng loại trừ và đầu vào thành một cổng “cổng cập nhật” (update gate). Nó cũng hợp trạng thái tế bào và trạng thái ẩn với nhau tạo ra một thay đổi khác. Kết quả là mô hình của ta sẽ đơn giản hơn mô hình LSTM chuẩn và ngày càng trở nên phổ biến.
 
 Dựa trên nhưng gì đã được tìm hiểu ở trên, có thể nói rằng LSTM là một mạng cải tiến của RNN nhằm giải quyết vấn đề nhớ các bước dài của RNN. LSTM là một bước lớn trong việc sử dụng RNN. Ý tưởng của nó giúp cho tất cả các bước của RNN có thể truy vấn được thông tin từ một tập thông tin lớn hơn. Ví dụ, nếu bạn sử dụng RNN để tạo mô tả cho một bức ảnh, nó có thể lấy một phần ảnh để dự đoán mô tả từ tất cả các từ đầu vào. 
 
