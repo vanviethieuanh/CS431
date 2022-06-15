@@ -495,3 +495,10 @@ for i in range(iterations):
 ```
 
 ## Kết luận
+
+Trong bài viết này, chúng tôi đã nói sơ qua về quá trình phát triển các mạng RNN cũng như trình bày sâu về LSTM và cài đặt nó với tensorflow để minh họa cách thực thi LSTM trong thực tế.
+
+LSTM là kiến trúc RNN phổ biến nhất, kể cả sau hơn 20 năm ra đời. Lý do lớn nhất là Vanilla RNN không thể nhớ rõ quá khứ. Bộ tham số duy nhất trong Vanilla RNN phải xử lý và ghi nhớ quá nhiều thông tin và nó dễ bị quá tải.
+
+Đối với thông tin tuần tự như cuộc hội thoại và văn bản, có một số thứ nguyên cần xử lý như nội dung cần nhấn mạnh, nội dung cần xuất và nội dung cần quên. LSTM giới thiệu ba loại bộ nhớ (cổng) được chọn lần lượt là Cổng vào, Cổng ra và Cổng Quên, cũng như chức năng Sigmoid để biểu thị tỷ lệ phần trăm thông tin cần xử lý. Việc có ba đơn vị ký ức hợp lý để xử lý các chiều khác nhau giúp cải thiện đáng kể khả năng của LSTM để ghi nhớ cả thông tin dài hạn và ngắn hạn.
+
