@@ -61,7 +61,7 @@ Mạng Long short-term memory(LSTM) là một loại mạng thần kinh trong Re
 
 ### 2.1 Recurrent neural network 
 
-#### 2.1.1 Mô hình Recurrent neural netword
+#### 2.1.1 Mô hình Recurrent neural network
 
 Như chúng ta đã biết, khi con người suy nghĩ hay đưa ra một quyết định nào đó, không thể đưa ra kết quả hợp lý từ khi bắt đầu suy nghĩ hay quyết định ngay tại thời điểm đó. Hoặc có thể hình dung đơn giản hơn khi đọc từng những dòng này, khi ta chỉ chỉ chọn một chữ trong dòng để đọc, ta không thể hiểu được nghĩa của nó được sử dụng là gì trong câu. Điều này đơn giản là vì khi ta suy nghĩ học đọc, chúng ta hiểu mỗi chữ ở đây dựa vào từ bạn đã hiểu các chữ trước đó chứ không phải là đọc tới đâu bỏ hết hết đi tới đó, rồi lại bắt đầu suy nghĩ lại từ đầu tới chữ chúng ta đang đọc. Tuy nhiên với các mạng thân kình nhân tạo truyền thống hay riêng với mạng Convolutional Neural Network thì để làm được điều này là bất khả thi.
 
