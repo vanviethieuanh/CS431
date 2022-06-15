@@ -77,10 +77,6 @@ Hình vẽ trên mô ta một đoạn của mạng thần kinh nhân tạo hồi
 
 Có thể hình dung rằng một mạng nhân tạo thần kinh hồi quy là nhiều bản sao chép của một mạng nhân tạo thuần trong đó mỗi đầu ra của mạng này là đầu vào của một mạng sao chép khác
 
-<p align="center">
-  <img src="/Images/LSTM/LSTM3-SimpleRNN.png"/>
-</p>
-
 
 #### 2.1.2 Những vấn đề tồn tại trong mạng RNN
 
@@ -91,7 +87,8 @@ Như đã được đề cập ở phần 1, về mặt lý thuyết, rõ ràng 
 Trong vài năm gần đây, dựa vào việc ứng dụng mạng RNN đã giúp giải quyết được nhiều vẫn đề ngoài sức tưỡng tượng trong nhiều lĩnh vực bao gồm: nhận dạng giọng nói, mô hình hóa ngôn ngữ, dịch máy, mô tả ảnh... .Đằng sau nhưng kết quả thành công tuyệt vời này là một phần không hề nhỏ sử đóng góp của mạng LSTM và cũng có thể gọi LSTM là một dạng đặc biệt của mạng thần kinh nhân tạo hồi quy.
 
 #### 2.2.1 Ý tưởng xây dựng cốt lỏi của LSTM
-
+Mạng bộ nhớ dài-ngắn (Long Short Term Memory networks), thường được gọi là LSTM, là một dạng đặc biệt của RNN, nhằm mục đích giải quyết các vần đề tốn tại của RNN, dó đó LSTM được thiết kế để tránh vấn đề phụ thuộc xa và có đặc tính là nhớ thông tin trong suất thời gian dài.
+Mọi mạng hồi quy đều có dạng là một chuỗi các mô-đun lặp đi lặp lại của mạng thần kinh nhân tạo. Với mạng RNN chuẩn, các mô-dun này có cấu trúc rất đơn giản, thường là một tầng <img src="https://render.githubusercontent.com/render/math?math=tanh">. LSTM kế thừa từ RNN và cũng có kiến trục mạng như vậy, nhưng các mô-đun trong nó có cấu trúc khác với mạng RNN chuẩn. Thay vì chỉ có một tầng mạng nơ-ron, chúng có tới 4 tầng tương tác với nhau một cách rất đặc biệt.
 Chìa khóa của LSTM là trạng thái tế bào (cell state). Trạng thái tế bào là một dạng giống như băng truyền. Nó chạy xuyên suốt tất cả các mắt xích (các nút mạng) và chỉ tương tác tuyến tính đôi chút. Vì vậy mà các thông tin có thể dễ dàng truyền đi thông suốt mà không sợ bị thay đổi.
 
 LSTM có khả năng bỏ đi hoặc thêm vào các thông tin cần thiết cho trạng thái tế báo, chúng được điều chỉnh cẩn thận bởi các nhóm được gọi là cổng (gate).
@@ -109,15 +106,16 @@ Mô hình LSTM gồm có 3 cổng như vậy để duy trì và điều hành tr
 
 #### 2.2.2 Cơ chế hoạt động chi tiết của LSTM
 
-Bước đầu tiên của mô hình LSTM là quyết định xem thông tin nào cần được bỏ đi hay dữ lại trong trạng thái tế bào. Quyết định được đưa ra bời "tầng cổng quên"(forget gate layer). Nó lấy đầu vào 
-
+Bước đầu tiên của mô hình LSTM là quyết định xem thông tin nào cần được bỏ đi hay dữ lại trong trạng thái tế bào. Quyết định được đưa ra bời "tầng cổng quên"(forget gate layer). 
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-f.png"/>
 </p>
 
+
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-i.png"/>
 </p>
+
 
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-C.png"/>
