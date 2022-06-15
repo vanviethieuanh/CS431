@@ -106,26 +106,33 @@ Mô hình LSTM gồm có 3 cổng như vậy để duy trì và điều hành tr
 
 #### 2.2.2 Cơ chế hoạt động chi tiết của LSTM
 
-Bước đầu tiên của mô hình LSTM là quyết định xem thông tin nào cần được bỏ đi hay dữ lại trong trạng thái tế bào. Quyết định được đưa ra bời "tầng cổng quên"(forget gate layer). 
+Bước đầu tiên của mô hình LSTM là quyết định xem thông tin nào cần được bỏ đi hay dữ lại trong trạng thái tế bào. Quyết định được đưa ra bời "tầng cổng quên"(forget gate layer).
+
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-f.png"/>
 </p>
 
+Nó sẽ lấy đầu vào là <img src="https://render.githubusercontent.com/render/math?math=h_{t-1}"> và <img src="https://render.githubusercontent.com/render/math?math=x_t"> rồi đưa ra kết quả là một số trong khoảng <img src="https://render.githubusercontent.com/render/math?math=[0,1]"> cho mỗi số trong trạng thái tế bào <img src="https://render.githubusercontent.com/render/math?math=C_{t-1}">. Với đẩu ra là <img src="https://render.githubusercontent.com/render/math?math=1"> thể hiện rằng nó giữ toàn bộ thông tin lại, ngược lại với <img src="https://render.githubusercontent.com/render/math?math=0"> thì toàn bộ thông tin sẽ bị loại bỏ đi.
 
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-i.png"/>
 </p>
 
+Ở bước tiếp theo là quyết định xem thông tin mới nào ta sẽ lưu vào trạng thái tế bào. Việc này gồm 2 phần. Đầu tiên là sử dụng một hàm <img src="https://render.githubusercontent.com/render/math?math=sigmoid"> được gọi là “tầng cổng vào” (input gate layer) để quyết định giá trị nào ta sẽ cập nhập. Tiếp theo là một tầng <img src="https://render.githubusercontent.com/render/math?math=tanh"> tạo ra một véc-tơ cho giá trị mới <img src="https://render.githubusercontent.com/render/math?math=C_t"> nhằm thêm vào cho trạng thái. Trong bước tiếp theo, ta sẽ kết hợp 2 giá trị đó lại để tạo ra một cập nhập cho trạng thái.
+Tại bước kế tiếp này là cập nhật lại trạng thái của tế bào củ <img src="https://render.githubusercontent.com/render/math?math=C_{t-1}"> thành trạng thái tế bào mới <img src="https://render.githubusercontent.com/render/math?math=C_t">. Từ nhưng bước trước mô hình đã quyết định xem dữ lại bao nhiêu thông tin, lấy bao nhiêu thông tin, giờ chúng ta chỉ cần thực hiện là xong.
 
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-C.png"/>
 </p>
 
-
+Ta sẽ nhân trạng thái cũ với <img src="https://render.githubusercontent.com/render/math?math=f_{t}"> để bỏ đi những thông tin ta quyết định quên lúc trước. Sau đó cộng thêm <img src="https://render.githubusercontent.com/render/math?math=i_{t} * C_t">. Trạng thái mơi thu được này phụ thuộc vào việc ta quyết định cập nhập mỗi giá trị trạng thái ra sao
 
 <p align="center">
   <img src="/Images/LSTM/LSTM3-focus-o.png"/>
 </p>
+
+Cuối cùng, ta cần quyết định xem ta muốn đầu ra là gì. Giá trị đầu ra sẽ dựa vào trạng thái tế bào, nhưng sẽ được tiếp tục sàng lọc. Đầu tiên, ta chạy một tầng chứa hàm <img src="https://render.githubusercontent.com/render/math?math=sigmoid"> để quyết định phần nào của trạng thái tế bào ta muốn xuất ra. Sau đó, ta đưa nó trạng thái tế bảo qua một hàm <img src="https://render.githubusercontent.com/render/math?math=tanh">  để co giá trị nó về khoảng<img src="https://render.githubusercontent.com/render/math?math=[-1,1]">, và nhân nó với đầu ra của cổng <img src="https://render.githubusercontent.com/render/math?math=sigmoid">  để được giá trị đầu ra ta mong muốn.
+
 
 #### 2.2.3 Kết luận về mạng LSTM 
 
