@@ -11,6 +11,10 @@
 
 ## 1 Sơ lược quá trình phát triển của LSTM
 
+Có rất nhiều vấn đề về mô hình hóa tuần tự trong cuộc sống hàng ngày: dịch máy, nhận dạng giọng nói, phân loại văn bản, phân tích trình tự DNA, v.v ... Hầu hết những vấn đề này thuộc về học có giám sát. Đầu vào hoặc đầu ra của các mô hình là tuần tự với kích thước thay đổi. Các mạng nơ-ron thông thường gặp khó khăn khi xử lý đầu vào và đầu ra với các kích thước khác nhau. Do đó, ta cần một mạng nơ-ron đáp ứng điều đó.
+
+Khái niệm RNN được đưa ra vào năm 1986. Và kiến trúc LSTM nổi tiếng được phát minh vào năm 1997. Số lượng kiến trúc nổi tiếng của RNN ít hơn nhiều so với kiến trúc của CNN. Như câu nói nổi tiếng “Một bức tranh có giá trị ngàn lời nói” ngụ ý rằng hình ảnh có nhiều thông tin và không gian hơn để điều khiển, vì vậy không có gì ngạc nhiên khi lịch sử tiến hóa của RNN không đầy màu sắc.
+
 ### 1.1 Kiến trúc RNN
 
 #### 1.1.1 Dữ liệu dạng sequence
