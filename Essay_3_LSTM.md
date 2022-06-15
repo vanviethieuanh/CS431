@@ -57,7 +57,7 @@ LSTM được thiết kế để tránh được vấn đề phụ thuộc xa (l
 
 ## 2. Tìm hiểu về mạng thần kinh nhân tạo Long short-term memory
 
-Mạng Long short-term memory(LSTM) là một loại mạng thần kinh trong Recurrent neural network(RNN) có khả năng học trong các bài toán đầu vào là một trình tự hay một dạng chuỗi. Trước khi đi sâu vào chi tiết mạng LSTM, chúng ta sẽ giới thiệu qua về Recurrent neural network. Học sâu gồm 2 mô hình lớn chính là Convolutional Neural Network(CNN) được sử dụng cho các bài toán xử lý đầu vào là ảnh, tương tự với Recurrent neural network(RNN) được sử dụng cho bài toán đầu vào dử liệu dạng chuỗi(sequence)
+Mạng Long short-term memory(LSTM) là một loại mạng thần kinh trong Recurrent neural network(RNN) có khả năng học trong các bài toán đầu vào là một trình tự hay một dạng chuỗi. Trước khi đi sâu vào chi tiết mạng LSTM, chúng ta sẽ giới thiệu qua về Recurrent neural network. Học sâu gồm 2 mô hình lớn chính là Convolutional Neural Network(CNN) được sử dụng cho các bài toán xử lý đầu vào là ảnh, tương tự với Recurrent neural network(RNN) được sử dụng cho bài toán đầu vào dữ liệu dạng chuỗi(sequence)
 
 ### 2.1 Recurrent neural network 
 
@@ -81,17 +81,16 @@ Hình vẽ trên mô ta một đoạn của mạng thần kinh nhân tạo hồi
 
 Có thể hình dung rằng một mạng nhân tạo thần kinh hồi quy là nhiều bản sao chép của một mạng nhân tạo thuần trong đó mỗi đầu ra của mạng này là đầu vào của một mạng sao chép khác
 
-
 #### 2.1.2 Những vấn đề tồn tại trong mạng RNN
 
-Như đã được đề cập ở phần 1, về mặt lý thuyết, rõ ràng là RNN có khả năng xử lý các phụ thuộc xa bằng cách cài đặt và xem xét các siêu tham số chính sác để giải quyết vấn đề này. Tuy nhiên trong thực tế, đáng tiếng là mạng RNN không thể học được một cách hiệu quả các phụ thuộc xa.
-Ngoài ra gradient biến mất(Vanishing gradient problem) và gradient bùng nổ(Exploding gradient problem) là các vấn đề này sảy ra do việc lựa chọn hàm kích hoạt không hợp lý hoặc số lượng các lớp ẩn quá lớn. Đặc biệt cũng là những vấn đề thường gặp phải khi sử dụng các kỹ thuật tối ưu hóa trong huấn luyện mạng thần kinh hồi quy.
+Như đã được đề cập ở phần 1, về mặt lý thuyết, rõ ràng là RNN có khả năng xử lý các phụ thuộc xa bằng cách cài đặt và xem xét các siêu tham số chính xác để giải quyết vấn đề này. Tuy nhiên trong thực tế, đáng tiếc là mạng RNN không thể học được một cách hiệu quả các phụ thuộc xa.
+Ngoài ra gradient biến mất(Vanishing gradient problem) và gradient bùng nổ (Exploding gradient problem) là các vấn đề này xảy ra do việc lựa chọn hàm kích hoạt không hợp lý hoặc số lượng các lớp ẩn quá lớn. Đặc biệt cũng là những vấn đề thường gặp phải khi sử dụng các kỹ thuật tối ưu hóa trong huấn luyện mạng thần kinh hồi quy.
 
 ### 2.2 Long short term memory (LSTM)
 
 Trong vài năm gần đây, dựa vào việc ứng dụng mạng RNN đã giúp giải quyết được nhiều bài toán ngoài sức tưỡng tượng trong nhiều lĩnh vực bao gồm: nhận dạng giọng nói, mô hình hóa ngôn ngữ, dịch máy, mô tả ảnh... .Đằng sau nhưng kết quả thành công tuyệt vời này là một phần không hề nhỏ sử đóng góp của mạng LSTM và cũng có thể gọi LSTM là một dạng đặc biệt của mạng thần kinh nhân tạo hồi quy.
 
-#### 2.2.1 Ý tưởng xây dựng cốt lỏi của LSTM
+#### 2.2.1 Ý tưởng xây dựng cốt lõi của LSTM
 Mạng bộ nhớ dài-ngắn (Long Short Term Memory networks), thường được gọi là LSTM, là một dạng đặc biệt của RNN, nhằm mục đích giải quyết các vần đề tốn tại của RNN, dó đó LSTM được thiết kế để tránh vấn đề phụ thuộc xa và có đặc tính là nhớ thông tin trong suốt thời gian dài.
 Mọi mạng hồi quy đều có dạng là một chuỗi các mô-đun lặp đi lặp lại của mạng thần kinh nhân tạo. Với mạng RNN chuẩn, các mô-dun này có cấu trúc rất đơn giản, thường là một tầng <img src="https://render.githubusercontent.com/render/math?math=tanh">. LSTM kế thừa từ RNN và cũng có kiến trục mạng như vậy, nhưng các mô-đun trong nó có cấu trúc khác với mạng RNN chuẩn. Thay vì chỉ có một tầng mạng nơ-ron, chúng có tới 4 tầng tương tác với nhau một cách rất đặc biệt.
 Chìa khóa của LSTM là trạng thái tế bào (cell state). Trạng thái tế bào là một dạng giống như băng truyền. Nó chạy xuyên suốt tất cả các mắt xích (các nút mạng) và chỉ tương tác tuyến tính đôi chút. Vì vậy mà các thông tin có thể dễ dàng truyền đi thông suốt mà không sợ bị thay đổi.
